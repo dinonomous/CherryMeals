@@ -1,12 +1,13 @@
 const express = require('express');
-// this is routes folder 
+const { jwtAuthMiddleware } = require('../middlewares/jwtAuthMiddleware');
 const router = express.Router();
+const { getCart } = require('../controllers/UserCart')
 
 router.get("/:id",  );
 
 // for users cart 
 
-router.get("/:id/cart",  );
+router.get("/:id/cart", jwtAuthMiddleware , getCart);
 router.post("/:id/cart/:foodId", )
 router.delete("/:id/cart/:foodId", )
 

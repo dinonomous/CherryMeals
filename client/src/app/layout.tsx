@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import ThemeToggleButton from '../components/ThemeToggleButton';
 import PrelineScript from "../components/PrelineScript";
+import Link from 'next/link';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -94,6 +95,7 @@ export default function RootLayout({
             aria-labelledby="hs-navbar-alignment-collapse"
           >
             <div className="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
+            <Link href="/user" className="ml-4">User</Link>
               <a
                 className="font-medium text-blue-500 focus:outline-none"
                 href="#"
