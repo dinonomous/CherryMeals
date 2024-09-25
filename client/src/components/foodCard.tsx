@@ -1,3 +1,4 @@
+import { stringifyError } from 'next/dist/shared/lib/utils';
 import Image from 'next/image';
 
 interface CardProps {
@@ -8,6 +9,7 @@ interface CardProps {
   deliveryTime: string;
   rating: number;
   imageUrl: string;
+  itemKey: string;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -18,9 +20,20 @@ const Card: React.FC<CardProps> = ({
   deliveryTime,
   rating,
   imageUrl,
+  itemKey,
 }) => {
+
+  const addToCart = (a: string) => {
+    console.log(a);
+  }
+
+  const handleAddToCartClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault(); // Prevent default anchor behavior
+    addToCart(itemKey);
+  }
+
   return (
-    <div className="max-w-[350px] flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
+    <div className="max-w-[350px] flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70" key={itemKey}>
       {/* Image */}
       <Image
         src={imageUrl}
@@ -78,6 +91,7 @@ const Card: React.FC<CardProps> = ({
           <a
             className="py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary text-white hover:bg-tertiary hover:text-black focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
             href="#"
+            onClick={handleAddToCartClick} // Updated click handler
           >
             Add to Cart
           </a>
