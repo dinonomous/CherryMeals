@@ -1,27 +1,16 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
+// Define the User schema
+const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phone: { type: String, required: true },
-  address: {
-    street: { type: String },
-    city: { type: String },
-    state: { type: String },
-    zip: { type: String },
-  },
-  cart: {
-    items: [
-      {
-        foodId: { type: Schema.Types.ObjectId, ref: 'Food' },
-        quantity: { type: Number, default: 1 },
-      },
-    ],
-    totalAmount: { type: Number, default: 0 },
-  },
-  orders: [{ type: Schema.Types.ObjectId, ref: 'Order' }],
+  address: { type: String, required: false },
+  orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+  cart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Food' }], 
 });
 
-module.exports = mongoose.model('User', UserSchema);
+const UserModel = mongoose.model('User', UserSchema);
+module.exports = UserModel;
+

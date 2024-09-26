@@ -3,7 +3,7 @@ const UserModel = require("../models/UserSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const { secretOrKey } = require("../config/keys");
+const { secretOrKey } = require('../config/keys');
 const { connectDB } = require("../config/db");
 const Joi = require("joi");
 
@@ -18,14 +18,6 @@ const loginSchema = Joi.object({
     "string.empty": "Password cannot be empty",
     "any.required": "Password is required",
   }),
-});
-
-const registerSchema = Joi.object({
-  name: Joi.string().min(3).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-  phonenumber: Joi.string().min(10).required(),
-  address: Joi.string().optional(),
 });
 
 router.get("/", (req, res) => {
@@ -78,7 +70,7 @@ router.post("/login", async (req, res) => {
       userType: "internal",
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    const token = jwt.sign(payload, secretOrKey, {
       expiresIn: "1d",
     });
 
@@ -106,68 +98,99 @@ router.post("/login", async (req, res) => {
 });
 
 router.options("/register", (req, res) => {
-  res.header("Access-Control-Allow-Origin", process.env.FRONTEND_API_URL);
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.sendStatus(200);
-});
-
-router.post("/register", async (req, res) => {
-  try {
-    res.header("Access-Control-Allow-Origin", process.env.FRONTEND_API_URL);
+    res.header("Access-Control-Allow-Origin", req.headers.origin); // Allow the request's origin
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.header("Access-Control-Allow-Credentials", "true");
-
-    const { name, email, password, phonenumber, address } = req.body;
-
-    const { error } = registerSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({
+    res.sendStatus(200);
+  });
+  
+  router.post("/register", async (req, res) => {
+    try {
+      res.header("Access-Control-Allow-Origin", req.headers.origin); // Allow the request's origin
+      res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials to be included
+  
+      const { name, email, password, phonenumber, address } = req.body;
+  
+      // Basic validation checks
+      const errors = [];
+  
+      // Validate name
+      if (!name || typeof name !== 'string' || name.length < 3) {
+        errors.push("Name must be at least 3 characters long and cannot be empty.");
+      }
+  
+      // Validate email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex
+      if (!email || !emailRegex.test(email)) {
+        errors.push("Please provide a valid email address.");
+      }
+  
+      // Validate password
+      if (!password || typeof password !== 'string' || password.length < 6) {
+        errors.push("Password must be at least 6 characters long and cannot be empty.");
+      }
+  
+      // Validate phone number
+      if (!phonenumber || typeof phonenumber !== 'string' || phonenumber.length < 10) {
+        errors.push("Phone number must be at least 10 characters long and cannot be empty.");
+      }
+  
+      // Address is optional but can be validated if required
+      if (address && typeof address !== 'string') {
+        errors.push("Address must be a valid string if provided.");
+      }
+  
+      // If there are validation errors, return them
+      if (errors.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: errors.join(" "),
+        });
+      }
+  
+      // Check if user already exists
+      const existingUser = await UserModel.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Email already registered",
+        });
+      }
+  
+      // Hash the password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+  
+      const newUser = new UserModel({
+        name,
+        email,
+        password: hashedPassword,
+        phone: phonenumber,
+        address,
+      });
+  
+      const savedUser = await newUser.save();
+  
+      return res.status(201).json({
+        success: true,
+        message: "User created successfully",
+        user: {
+          id: savedUser._id,
+          name: savedUser.name,
+          email: savedUser.email,
+        },
+      });
+    } catch (error) {
+      console.error("Error creating user:", error);
+      return res.status(500).json({
         success: false,
-        message: error.details[0].message,
+        message: "Server error",
+        error: error.message,
       });
     }
-
-    // Check if user already exists
-    const existingUser = await UserModel.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: "Email already registered",
-      });
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const newUser = new UserModel({
-      name,
-      email,
-      password: hashedPassword,
-      phone: phonenumber,
-      address,
-    });
-
-    const savedUser = await newUser.save();
-
-    res.status(201).json({
-      success: true,
-      message: "User created successfully",
-      user: {
-        id: savedUser._id,
-        name: savedUser.name,
-        email: savedUser.email,
-      },
-    });
-  } catch (error) {
-    console.error("Error creating user:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-      error: error.message,
-    });
-  }
-});
+  });
+  
 
 router.post("/check-email", async (req, res) => {
   const { email } = req.body;
@@ -181,30 +204,35 @@ router.post("/check-email", async (req, res) => {
 });
 
 router.get("/checkAuth", (req, res) => {
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.status(401).send({
-      success: false,
-      message: "User not authenticated",
-    });
-  }
-
-  jwt.verify(token, secretOrKey, (err, decoded) => {
-    if (err) {
+    const token = req.cookies.token; // Get the token from cookies
+  
+    if (!token) {
       return res.status(401).send({
         success: false,
-        message: "Token is invalid",
+        message: "User not authenticated",
       });
     }
-
-    return res.status(200).send({
-      success: true,
-      message: "User is authenticated",
-      user: decoded,
+  
+    // Verify the JWT token
+    jwt.verify(token, secretOrKey, (err, decoded) => {
+      if (err) {
+        return res.status(401).send({
+          success: false,
+          message: "Token is invalid",
+        });
+      }
+  
+      // Assuming the user ID is stored in the token's payload (e.g., `decoded.userId`)
+      const userId = decoded.id || decoded.userId; // Adjust according to how the token was created
+  
+      return res.status(200).send({
+        success: true,
+        message: "User is authenticated",
+        userId, 
+        user: decoded, 
+      });
     });
   });
-});
 
 router.post("/logout", (req, res) => {
   try {

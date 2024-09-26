@@ -32,6 +32,7 @@ const RegistrationForm: React.FC = () => {
       
       
     try {
+        console.log(userData);
       const response = await fetch("http://localhost:2560/api/v1/auth/register", {
         method: "POST",
         headers: {

@@ -1,5 +1,6 @@
 const Restaurant = require("../models/RestaurantSchema");
-const { getSignedImageUrl } = require('./imageController')
+const FoodSchema = require("../models/FoodSchema");
+const { getSignedImageUrl } = require('./imageController');
 
 const menue = async (req, res) => {
   try {
@@ -7,18 +8,31 @@ const menue = async (req, res) => {
     if (!restaurant) {
       return res.status(404).json({ message: "Restaurant not found" });
     }
-    const menue = restaurant.foodItems.map((foods)=>{
+
+    const menu = await Promise.all(
+      restaurant.foodItems.map(async (foodItem) => {
+        const food = await FoodSchema.findById(foodItem.foodId);
+
+        if (!food) {
+          return null; 
+        }
         return {
-            name: foods.name,
-            imageUrl: getSignedImageUrl(req.params.id,foods.foodId),
-            price: foods.price,
-            description: foods.description,
-            rating: foods.rating,
-            ratingCount: foods.ratingCount
-            }
-    })
-    res.json(menue);
+          name: food.name,
+          imageUrl: getSignedImageUrl(req.params.id, foodItem.foodId),
+          price: food.price,
+          description: food.description,
+          rating: food.rating,
+          ratingCount: food.ratingCount
+        };
+      })
+    );
+
+    const filteredMenu = menu.filter(item => item !== null);
+
+    res.json(filteredMenu);
+    
   } catch (error) {
+    console.error("Error fetching menu:", error);
     res.status(500).json({ message: "Error fetching menu" });
   }
 };

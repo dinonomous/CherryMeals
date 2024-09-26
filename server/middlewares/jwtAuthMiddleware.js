@@ -1,56 +1,58 @@
-const passport = require('passport');
-const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
+const jwt = require('jsonwebtoken');
 const UserModel = require("../models/UserSchema");
 const { secretOrKey } = require('../config/keys');
 
+// Middleware for extracting the token from cookies
 const cookieExtractor = (req) => {
+    console.log(req.cookies)
   return req && req.cookies ? req.cookies['token'] : null;
 };
 
-const opts = {
-  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-  secretOrKey,
-};
-
-// Passport JWT strategy
-passport.use(
-  new JwtStrategy(opts, async (jwt_payload, done) => {
-    try {
-      if (jwt_payload.userType === "external") {
-        return done(null, true);
-      }
-
-      const user = await UserModel.findById(jwt_payload.id);
-      if (user) {
-        return done(null, user);
-      }
-      
-      return done(null, false, { message: 'User not found' });
-    } catch (err) {
-      console.error('Error during JWT authentication:', err);
-      return done(err, false);
+// Custom JWT authentication middleware
+const jwtAuthMiddleware = async (req, res, next) => {
+  try {
+    // Extract the token from the request cookies
+    const token = cookieExtractor(req);
+    
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized: No token provided',
+      });
     }
-  })
-);
 
+    // Verify the token
+    const decoded = jwt.verify(token, secretOrKey);
 
-const jwtAuthMiddleware = (req, res, next) => {
-  passport.authenticate('jwt', { session: false }, (err, user, info) => {
-    if (err) {
-      console.error('Authentication error:', err);
-      return res.status(401).json({ success: false, message: 'Unauthorized', error: err.message });
+    // Check if the user is an "external" user
+    if (decoded.userType === "external") {
+      return next(); // Skip user lookup for external users
     }
+
+    // Lookup the user in the database using the id from the JWT
+    const user = await UserModel.findById(decoded.id);
 
     if (!user) {
-      return res.status(401).json({ success: false, message: 'Unauthorized' });
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized: User not found',
+      });
     }
 
+    // Attach the user to the request object
     req.user = user;
-    next();
-  })(req, res, next);
+    next(); // Proceed to the next middleware/route handler
+
+  } catch (error) {
+    console.error('JWT Authentication error:', error);
+    return res.status(401).json({
+      success: false,
+      message: 'Unauthorized: Invalid or expired token',
+      error: error.message,
+    });
+  }
 };
 
 module.exports = {
   jwtAuthMiddleware,
-  passport,
 };

@@ -5,12 +5,7 @@ const RestaurantSchema = new Schema({
   name: { type: String, required: true },
   foodItems: [
     {
-      foodId: { type: Schema.Types.ObjectId, ref: 'Food' },
-      name: { type: String, required: true },
-      price: { type: Number, required: true },
-      description: { type: String },
-      rating: { type: Number, default: 0 },
-      ratingCount: { type: Number, default: 0 },
+      foodId: { type: String, ref: 'Food', required: true }, // Reference to Food schema
     },
   ],
   rating: { type: Number, default: 0 },
@@ -18,3 +13,4 @@ const RestaurantSchema = new Schema({
 });
 
 module.exports = mongoose.model('Restaurant', RestaurantSchema);
+

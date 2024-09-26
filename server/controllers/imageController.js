@@ -1,28 +1,33 @@
-// controllers/imageController.js
-const s3 = require('../aws/s3Client')
-const getSignedImageUrl = (restaurantId, foodId = null) => {
-    // Define the default key (folder structure) based on the presence of foodId
-    const key = foodId 
-      ? `CherryMeals/${restaurantId}/${foodId}.png` 
-      : `CherryMeals/${restaurantId}/hotelImages/1.png`; // Use default image for restaurant
-  
-    const params = {
-      Bucket: 'dineshwar',
-      Key: key, // Use the key built dynamically based on inputs
-      Expires: 60 * 60, // URL expires in 1 hour
-    };
-  
-    return s3.getSignedUrl('getObject', params);
-  };
-  
+const s3 = require('../aws/s3Client');
 
-const generateSignedUrl = async (req, res) => {
+// Generate a signed URL for a food image based on the `foodId`
+const getSignedImageUrl = (foodId) => {
+  // Define the default key based on the foodId
+  console.log(foodId);
+  const key = `CherryMeals/food/${foodId}.png`;
+
+  const params = {
+    Bucket: 'dineshwar', // Your S3 bucket name
+    Key: key,           // Path to the image in the S3 bucket
+    Expires: 60 * 60,   // URL expires in 1 hour
+  };
+
+  // Generate the signed URL
+  return s3.getSignedUrl('getObject', params);
+};
+
+// Controller to generate signed URL for a specific food/restaurant image
+const generateSignedUrl = (req, res) => {
   const { restaurantId, foodId } = req.params;
 
   try {
-    const imageUrl = getSignedImageUrl(restaurantId, foodId);
+    // Get the signed URL for the food image
+    const imageUrl = getSignedImageUrl(foodId);
+    
+    // Send the URL back in the response
     res.status(200).json({ imageUrl });
   } catch (error) {
+    // Error handling if something goes wrong
     res.status(500).json({ message: 'Error generating signed URL', error: error.message });
   }
 };
@@ -31,3 +36,4 @@ module.exports = {
   generateSignedUrl,
   getSignedImageUrl
 };
+
