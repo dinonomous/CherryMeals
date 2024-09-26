@@ -6,7 +6,7 @@ module.exports = {
   secretOrKey: process.env.JWT_SECRET,
   port: process.env.PORT || 3000,
   stripeSecretKey: process.env.STRIPE_SECRET_KEY,
-  cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
-  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
+  AWSACCESSKEYID: process.env.AWS_ACCESS_KEY_ID,
+  AWSSECRETACCESSKEY: process.env.AWS_SECRET_ACCESS_KEY,
   nodeEnv: process.env.NODE_ENV || 'development',
 };

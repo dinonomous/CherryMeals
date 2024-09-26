@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const UserRoutes = require("./routes/UserRoutes");
 const AuthRoutes = require("./routes/AuthRoutes");
+const RestaurantRoutes = require('./routes/RestaurantRoutes')
 const HomepageRoutes = require('./routes/HomepageRoutes')
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/homepage", HomepageRoutes);
 app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/auth", AuthRoutes); // Make sure the route name is consistent (lowercase `auth`)
+app.use("/api/v1/restaurant", RestaurantRoutes);
 
 // Start the server
 app.listen(PORT, () => {
