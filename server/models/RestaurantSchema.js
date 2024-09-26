@@ -11,7 +11,6 @@ const RestaurantSchema = new Schema({
       description: { type: String },
       rating: { type: Number, default: 0 },
       ratingCount: { type: Number, default: 0 },
-      image: { type: String }, // Field to store the image URL
     },
   ],
   rating: { type: Number, default: 0 },

@@ -1,5 +1,6 @@
 const Restaurant = require("../models/RestaurantSchema");
 const Topfood = require("../models/TopFoodSchema");
+const { getSignedImageUrl } = require('../controllers/imageController')
 
 const getRestaurants = async (req, res) => {
   try {
@@ -20,6 +21,7 @@ const getRestaurantsWithOutFoodItems = async (req, res) => {
         _id: obj._id,
         name: obj.name,
         rating: obj.rating,
+        image: getSignedImageUrl(obj._id)
       };
     });
 
