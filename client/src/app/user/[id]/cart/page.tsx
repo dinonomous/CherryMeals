@@ -1,7 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
+import CartItem from "@/components/CartItem";
+import CartSummary from "@/components/CartSummary";
 
-// Utility to format currency
+interface CartItemType {
+  foodId: string;
+  name: string;
+  description: string;
+  price: number;
+  rating: number;
+  ratingCount: number;
+  image: string;
+  quantity: number; // Added quantity property
+}
+
 const formatCurrency = (number: number) => {
   return number.toLocaleString("en-US", {
     style: "currency",
@@ -9,81 +21,135 @@ const formatCurrency = (number: number) => {
   });
 };
 
-// Define CartPage as a React Functional Component accepting params
 const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
-  const { id: userId } = params; // Destructure the userId from params
+  const { id: userId } = params;
 
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState<CartItemType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
+  // Fetch the cart items when the component is mounted
+  const fetchCartItems = async () => {
     if (userId) {
-      // Dynamically build the API URL based on userId
       const API_URL = `http://localhost:2560/api/v1/users/${userId}/cart`;
 
-      // Fetch data from API
-      const fetchCartItems = async () => {
-        try {
-          const response = await fetch(API_URL, {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          const data = await response.json();
-          console.log("Fetched data:", data);
-          // Group items by foodId and count occurrences
-          const groupedItems = data.reduce((acc, item) => {
-            const existingItem = acc.find((i) => i.foodId === item.foodId);
-            if (existingItem) {
-              existingItem.quantity += 1;
-            } else {
-              acc.push({ ...item, quantity: 1 });
-            }
-            return acc;
-          }, []);
-          setCartItems(groupedItems);
-        } catch (error) {
-          console.error("Error fetching cart items:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
+      try {
+        const response = await fetch(API_URL, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
 
-      fetchCartItems();
+        // Initialize quantity to 1 if not present
+        const cartData = data.map((item: CartItemType) => ({
+          ...item,
+          quantity: item.quantity || 1,
+        }));
+
+        setCartItems(cartData); // Set the fetched data to the state
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      } finally {
+        setLoading(false);
+      }
     }
-  }, [userId]);
+  };
 
-  // Calculate total price of cart items
-  const calculateTotal = () =>
-    cartItems.reduce((total, item) => total + item.price * (item.quantity || 1), 0);
+  // Fetch cart items on component mount
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
 
-  // Function to handle incrementing the item quantity
+  // Helper function to send updated cart to the server
+  const updateCartOnServer = async (updatedCart: CartItemType[]) => {
+    const API_URL = `http://localhost:2560/api/v1/users/${userId}/cart`;
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cart: updatedCart }), // Send updated cart items
+      });
+      const data = await response.json();
+      if (data.success) {
+        console.log("Cart updated successfully on the server");
+      } else {
+        console.error("Failed to update cart on the server");
+      }
+    } catch (error) {
+      console.error("Error updating cart on the server:", error);
+    }
+    fetchCartItems();
+  };
+
+  // Handle increment
   const handleIncrement = (id: string) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
+    setCartItems((prevItems) => {
+      const updatedCart = prevItems.map((item) =>
         item.foodId === id
-          ? { ...item, quantity: (item.quantity || 1) + 1 }
+          ? { ...item, quantity: item.quantity + 1 }
           : item
-      )
-    );
+      );
+      updateCartOnServer(updatedCart);
+      return updatedCart;
+    });
   };
 
-  // Function to handle decrementing the item quantity
+  // Handle decrement
   const handleDecrement = (id: string) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.foodId === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
+    setCartItems((prevItems) => {
+      const updatedCart = prevItems
+        .map((item) =>
+          item.foodId === id && item.quantity > 1
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0);
+      updateCartOnServer(updatedCart);
+      return updatedCart;
+    });
   };
 
-  // Remove an item from the cart
-  const handleRemove = (id: string) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.foodId !== id));
+  // Handle item removal
+  const handleRemove = async (id: string) => {
+    const API_URL = `http://localhost:2560/api/v1/users/${userId}/cart/${id}`;
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        console.log("Item removed from cart successfully");
+        // Update local cart state after successful deletion
+        setCartItems((prevItems) =>
+          prevItems.filter((item) => item.foodId !== id)
+        );
+      } else {
+        console.error("Failed to remove item from cart");
+      }
+      fetchCartItems();
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+    }
+  };
+
+  const calculateTotal = () => {
+    // Calculate total price based on item price and quantity
+    return cartItems.reduce((total, item) => {
+      const itemPrice = item.price || 0;
+      return total + itemPrice * item.quantity;
+    }, 0);
   };
 
   if (loading) {
@@ -100,54 +166,14 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
           </h2>
           {cartItems.length > 0 ? (
             cartItems.map((item) => (
-              <div
+              <CartItem
                 key={item.foodId}
-                className="store-item border-b pb-4 mb-4 flex h-72"
-              >
-                <img
-                  className="image-store object-cover rounded-lg w-1/2 h-full"
-                  src={item.image}
-                  alt={item.name}
-                />
-                <div className="content w-1/3 flex items-start flex-col px-4 gap-1 justify-between">
-                  <div>
-                    <h4 className="text-lg font-semibold mt-2">
-                      {item.name}
-                    </h4>
-                    <p className="text-sm text-gray-500">
-                      {item.description}
-                    </p>
-                    <p className="text-sm text-gray-400">
-                      Rating: {item.rating} ({item.ratingCount} reviews)
-                    </p>
-                  </div>
-                  <button
-                    className="px-2 py-1 bg-red-500 text-white rounded"
-                    onClick={() => handleRemove(item.foodId)}
-                  >
-                    Remove
-                  </button>
-                </div>
-
-                <div className="mt-2 flex items-center justify-between flex-col">
-                  <div className="flex items-center space-x-2">
-                    <button
-                      className="px-2 py-1 bg-gray-300"
-                      onClick={() => handleDecrement(item.foodId)}
-                    >
-                      -
-                    </button>
-                    <span>{item.quantity || 1}</span>
-                    <button
-                      className="px-2 py-1 bg-gray-300"
-                      onClick={() => handleIncrement(item.foodId)}
-                    >
-                      +
-                    </button>
-                  </div>
-                  <h5>{formatCurrency(item.price)}</h5>
-                </div>
-              </div>
+                item={item}
+                onIncrement={handleIncrement}
+                onDecrement={handleDecrement}
+                onRemove={handleRemove}
+                formatCurrency={formatCurrency}
+              />
             ))
           ) : (
             <p>Your cart is empty.</p>

@@ -8,9 +8,13 @@ const UserSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   address: { type: String, required: false },
   orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
-  cart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Food' }], 
+  cart: [
+    {
+      foodId: { type: mongoose.Schema.Types.ObjectId, ref: 'Food' },
+      quantity: { type: Number, default: 1 }, // Quantity added
+    },
+  ],
 });
 
 const UserModel = mongoose.model('User', UserSchema);
 module.exports = UserModel;
-

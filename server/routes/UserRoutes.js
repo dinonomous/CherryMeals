@@ -1,16 +1,16 @@
 const express = require('express');
 const { jwtAuthMiddleware } = require('../middlewares/jwtAuthMiddleware');
-const { addIntoCart } = require('../controllers/UserCart')
+const { getCart, addIntoCart, updateCart, deleteFromCart } = require('../controllers/UserCart')
 const router = express.Router();
-const { getCart } = require('../controllers/UserCart')
 
 router.get("/:id",  );
 
 // for users cart 
 
 router.get("/:id/cart", jwtAuthMiddleware , getCart);
-router.post("/:id/cart/:foodId" , addIntoCart);
-router.delete("/:id/cart/:foodId", )
+router.post("/:id/cart/:foodId" ,jwtAuthMiddleware, addIntoCart);
+router.delete("/:id/cart/:foodId", jwtAuthMiddleware, deleteFromCart);
+router.put("/:id/cart", jwtAuthMiddleware, updateCart);
 
 // for usrs Orders 
 

@@ -5,6 +5,7 @@ import ThemeToggleButton from "../components/ThemeToggleButton";
 import PrelineScript from "../components/PrelineScript";
 import UserControols from "../components/UserControols";
 import Link from "next/link";
+import Cartbutton from "@/components/Cartbutton";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,7 +28,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
   return (
     <html lang="en">
       <body
@@ -102,13 +102,7 @@ export default function RootLayout({
                 >
                   Home
                 </Link>
-                <Link
-                  href="/"
-                  className="font-medium text-black dark:text-whiteCustom focus:outline-none"
-                  aria-current="page"
-                >
-                  Cart
-                </Link>
+                <Cartbutton />
                 <Link
                   href="/"
                   className="font-medium text-black dark:text-whiteCustom focus:outline-none"

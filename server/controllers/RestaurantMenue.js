@@ -22,7 +22,8 @@ const menue = async (req, res) => {
           price: food.price,
           description: food.description,
           rating: food.rating,
-          ratingCount: food.ratingCount
+          ratingCount: food.ratingCount,
+          id: foodItem.foodId
         };
       })
     );

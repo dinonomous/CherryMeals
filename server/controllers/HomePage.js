@@ -1,5 +1,5 @@
 const Restaurant = require("../models/RestaurantSchema");
-const Topfood = require("../models/TopFoodSchema");
+const FoodSchema = require("../models/FoodSchema");
 const { getSignedImageUrl } = require('../controllers/imageController')
 
 const getRestaurants = async (req, res) => {
@@ -57,7 +57,7 @@ const getRestaurantsWithOutFoodItemsId = async (req, res) => {
 
 const TopFood = async (req, res) => {
     try {
-      const topfood = await Topfood.find();
+      const topfood = await FoodSchema.find();
   
       res.json(topfood);
     } catch (error) {
