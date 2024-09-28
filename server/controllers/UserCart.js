@@ -22,12 +22,13 @@ const getCart = async (req, res) => {
         return {
           foodId: foodItem._id,
           name: foodItem.name,
+          restaurantId: foodItem.restaurantId,
           price: foodItem.price,
           description: foodItem.description,
           rating: foodItem.rating,
           ratingCount: foodItem.ratingCount,
           image: getSignedImageUrl(foodItem._id),
-          quantity, // Include quantity
+          quantity,
         };
       }
     });

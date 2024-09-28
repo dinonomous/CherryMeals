@@ -7,6 +7,7 @@ const HomepageRoutes = require('./routes/HomepageRoutes')
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
+const session = require('express-session');
 
 const PORT = 2560;
 
@@ -14,6 +15,12 @@ const PORT = 2560;
 connectDB();
 
 // Middleware for parsing JSON and URL-encoded data
+app.use(session({
+  secret: 'your_secret_key', // Replace with your own secret
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true in production with HTTPS
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

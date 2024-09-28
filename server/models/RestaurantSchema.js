@@ -5,7 +5,7 @@ const RestaurantSchema = new Schema({
   name: { type: String, required: true },
   foodItems: [
     {
-      foodId: { type: String, ref: 'Food', required: true }, // Reference to Food schema
+      foodId: { type: String, ref: 'Food', required: true },
     },
   ],
   rating: { type: Number, default: 0 },

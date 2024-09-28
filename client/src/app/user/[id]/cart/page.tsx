@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import CartItem from "@/components/CartItem";
-import CartSummary from "@/components/CartSummary";
 
 interface CartItemType {
   foodId: string;
@@ -11,7 +10,8 @@ interface CartItemType {
   rating: number;
   ratingCount: number;
   image: string;
-  quantity: number; // Added quantity property
+  quantity: number;
+  restaurantId: string; // Added restaurantId for grouping items
 }
 
 const formatCurrency = (number: number) => {
@@ -26,6 +26,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
 
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch the cart items when the component is mounted
   const fetchCartItems = async () => {
@@ -42,6 +43,10 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
         });
         const data = await response.json();
 
+        if (!data || !data.length) {
+          setError("Your cart is empty.");
+        }
+
         // Initialize quantity to 1 if not present
         const cartData = data.map((item: CartItemType) => ({
           ...item,
@@ -51,6 +56,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
         setCartItems(cartData); // Set the fetched data to the state
       } catch (error) {
         console.error("Error fetching cart items:", error);
+        setError("Failed to load cart items.");
       } finally {
         setLoading(false);
       }
@@ -91,9 +97,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
   const handleIncrement = (id: string) => {
     setCartItems((prevItems) => {
       const updatedCart = prevItems.map((item) =>
-        item.foodId === id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
+        item.foodId === id ? { ...item, quantity: item.quantity + 1 } : item
       );
       updateCartOnServer(updatedCart);
       return updatedCart;
@@ -144,16 +148,41 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
     }
   };
 
+  // Handle checkout
+  const handleCheckout = async () => {
+    if (!userId) {
+      setError("User information is missing.");
+      return;
+    }
+
+    // Calculate total amount from cart items
+    const totalAmount = calculateTotal(); // Get total amount
+
+    // Replace with actual restaurantId if you have it stored in the state or props
+    const restaurantId = cartItems[0]?.restaurantId; // Assuming all items are from the same restaurant
+
+    if (!restaurantId) {
+      setError("Restaurant information is missing.");
+      return;
+    }
+
+    // Redirect to the payment API
+    const paymentURL = `http://localhost:2560/api/v1/users/pay?amount=${totalAmount}&userId=${userId}&restaurantId=${restaurantId}`;
+
+    // Redirect the user to the payment URL
+    window.location.href = paymentURL;
+  };
+
   const calculateTotal = () => {
-    // Calculate total price based on item price and quantity
-    return cartItems.reduce((total, item) => {
-      const itemPrice = item.price || 0;
-      return total + itemPrice * item.quantity;
-    }, 0);
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
   if (loading) {
     return <p>Loading cart...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
   }
 
   return (
@@ -194,7 +223,10 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
             <p>Total:</p>
             <p>{formatCurrency(calculateTotal())}</p>
           </div>
-          <button className="w-full mt-4 py-2 bg-blue-500 text-white rounded">
+          <button
+            onClick={handleCheckout}
+            className="w-full mt-4 py-2 bg-blue-500 text-white rounded"
+          >
             Proceed to Checkout
           </button>
         </div>

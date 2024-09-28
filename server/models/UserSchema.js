@@ -11,7 +11,8 @@ const UserSchema = new mongoose.Schema({
   cart: [
     {
       foodId: { type: mongoose.Schema.Types.ObjectId, ref: 'Food' },
-      quantity: { type: Number, default: 1 }, // Quantity added
+      restaurantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant' }, // Added restaurantId
+      quantity: { type: Number, default: 1 },
     },
   ],
 });
