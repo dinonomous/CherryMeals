@@ -65,7 +65,7 @@ const Card: React.FC<CardProps> = ({
   alt="Card Image"
   width={350}
   height={100}
-  className="w-full h-96 rounded-t-xl object-cover"
+  className="w-full h-40 rounded-t-xl object-cover sm:h-96"
 />
 
       <div className="p-4 md:p-5">

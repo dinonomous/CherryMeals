@@ -44,22 +44,32 @@ const PaymentPage = () => {
   };
 
   return (
-    <div>
-      <h2>Order Summary</h2>
-      <ul>
-        {orderData.map((order, index) => (
-          <li key={index}>
-            {order.items.map(item => (
-              <p key={item.foodId}>
-                {item.foodId} - Quantity: {item.quantity} - Price: {item.price}
-              </p>
-            ))}
-            <p>Total Amount: {order.totalAmount}</p>
-          </li>
+    <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+  <h2 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-white">Order Summary</h2>
+  
+  <ul className="space-y-4">
+    {orderData.map((order, index) => (
+      <li key={index} className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-sm">
+        {order.items.map((item) => (
+          <p key={item.foodId} className="text-gray-700 dark:text-gray-300">
+            <span className="font-medium">{item.foodId}</span> - Quantity: {item.quantity} - Price: ₹{item.price}
+          </p>
         ))}
-      </ul>
-      <button onClick={handleProceedToPayment}>Proceed to Payment</button>
-    </div>
+        <p className="text-lg font-semibold text-gray-900 dark:text-white mt-4">
+          Total Amount: ₹{order.totalAmount}
+        </p>
+      </li>
+    ))}
+  </ul>
+
+  <button 
+    onClick={handleProceedToPayment}
+    className="mt-6 w-full bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-lg transition duration-300 ease-in-out shadow-md focus:outline-none"
+  >
+    Proceed to Payment
+  </button>
+</div>
+
   );
 };
 

@@ -25,13 +25,13 @@ const CartItem: React.FC<CartItemProps> = ({
   formatCurrency,
 }) => {
   return (
-    <div className="store-item border-b pb-4 mb-4 flex h-72">
+    <div className="store-item border-b pb-4 mb-4 flex sm:h-72 h-fit flex-col sm:flex-row">
       <img
-        className="image-store object-cover rounded-lg w-1/2 h-full"
+        className="image-store object-cover rounded-lg sm:w-1/2 w-full sm:h-full h-52"
         src={item.image}
         alt={item.name}
       />
-      <div className="content w-1/3 flex items-start flex-col px-4 gap-1 justify-between">
+      <div className="content sm:w-1/3 w-full flex items-start flex-col px-4 sm:gap-1 gap-6 justify-between">
         <div>
           <h4 className="text-lg font-semibold mt-2">{item.name}</h4>
           <p className="text-sm text-gray-500">{item.description}</p>
