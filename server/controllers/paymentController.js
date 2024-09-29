@@ -10,8 +10,8 @@ const MERCHANT_ID = process.env.MERCHANT_ID || "PGTESTPAYUAT86";
 const PHONE_PE_HOST_URL = process.env.PHONE_PE_HOST_URL;
 const SALT_INDEX = process.env.SALT_INDEX;
 const SALT_KEY = process.env.SALT_KEY;
-const APP_BE_URL = 'http://localhost:2560';
-const APP_FE_URL = 'http://localhost:3000';
+const APP_BE_URL = process.env.APP_BE_URL;
+const APP_FE_URL = process.env.APP_FE_URL;
 
 // Proceed to payment route (initiate payment and redirect)
 const initiatePayment = async (req, res) => {

@@ -9,6 +9,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const session = require('express-session');
+require("dotenv").config();
 
 const PORT = 2560;
 
@@ -28,7 +29,7 @@ app.use(cookieParser());
 
 // CORS Configuration - Allow credentials and specify origin
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.APP_FE_URL,
     credentials: true,
 }));
 
