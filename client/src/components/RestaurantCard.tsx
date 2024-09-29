@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import axios from 'axios';
+require("dotenv").config();
 
 interface RestaurantCardProps {
   title: string;
@@ -30,7 +31,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({
 
   const handleRemoveClick = async () => {
     try {
-      const response = await axios.delete(`http://localhost:2560/api/v1/restaurant/food/${itemKey}`);
+      const response = await axios.delete(`require("dotenv").config();/api/v1/restaurant/food/${itemKey}`);
       if (response.status === 200) {
         onRemove(itemKey); // Call the remove handler
       }

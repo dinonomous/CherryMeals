@@ -1,9 +1,9 @@
 'use client'; // Ensure this is at the top to use client-side features like useRouter
 
 import { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation'; // Use 'next/navigation' instead of 'next/router' in app directory
+import { useRouter } from 'next/navigation';
+require("dotenv").config();
 
-// Define the types for order items and order data
 interface OrderItem {
   foodId: string;
   quantity: number;
@@ -39,7 +39,7 @@ const PaymentPage = () => {
       const orderId = order._id;
 
       // Redirect to the initiate payment URL with the amount as a query parameter
-      router.push(`http://localhost:2560/api/v1/users/proceed/${orderId}?amount=${formattedAmount}`);
+      router.push(`${process.env.APP_BE_URL}/api/v1/users/proceed/${orderId}?amount=${formattedAmount}`);
     }
   };
 

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+require("dotenv").config();
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ const LoginForm: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("http://localhost:2560/api/v1/auth/checkAuth", {
+        const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/checkAuth`, {
           method: "GET",
           credentials: "include",
         });
@@ -36,7 +37,7 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:2560/api/v1/auth/login", {
+      const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

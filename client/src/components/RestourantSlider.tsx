@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import Link from "next/link";
+require("dotenv").config();
 
 const CardSlider: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -34,7 +35,7 @@ const CardSlider: React.FC = () => {
     const fetchRestaurants = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2560/api/v1/homepage/nofooditems"
+          `${process.env.APP_BE_URL}/api/v1/homepage/nofooditems`
         );
         setRestaurants(response.data);
       } catch (error) {

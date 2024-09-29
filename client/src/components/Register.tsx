@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation"; // Updated import for Next.js 13
 import Image from "next/image";
 import Link from "next/link";
+require("dotenv").config();
 
 const RegistrationForm: React.FC = () => {
   const [name, setName] = useState("");
@@ -33,7 +34,7 @@ const RegistrationForm: React.FC = () => {
       
     try {
         console.log(userData);
-      const response = await fetch("http://localhost:2560/api/v1/auth/register", {
+      const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import RestaurantCard from "./ReastrauntcardR";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
+require("dotenv").config();
 
 const FoodManagementSection = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const FoodManagementSection = () => {
     const fetchRestaurantId = async () => {
       try {
         const response = await fetch(
-          "http://localhost:2560/api/v1/auth/restaurant/checkAuth",
+          `${process.env.APP_BE_URL}/api/v1/auth/restaurant/checkAuth`,
           {
             method: "GET",
             credentials: "include",
@@ -46,7 +47,7 @@ const FoodManagementSection = () => {
     if (userId) {
       try {
         const response = await axios.get(
-          `http://localhost:2560/api/v1/restaurant/nofooditems/${userId}/menue`
+          `${process.env.APP_BE_URL}/api/v1/restaurant/nofooditems/${userId}/menue`
         );
         setFoodItems(response.data);
       } catch (error) {
@@ -63,7 +64,7 @@ const FoodManagementSection = () => {
 
   const handleRemove = async (itemKey: string) => {
     try {
-      await axios.delete(`http://localhost:2560/api/v1/restaurant/deletefood/${itemKey}`, {
+      await axios.delete(`${process.env.APP_BE_URL}/api/v1/restaurant/deletefood/${itemKey}`, {
         withCredentials: true,
       });
 
@@ -91,7 +92,7 @@ const FoodManagementSection = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:2560/api/v1/restaurant/addfood/${userId}`, formData, {
+      const response = await axios.post(`${process.env.APP_BE_URL}/api/v1/restaurant/addfood/${userId}`, formData, {
         headers: {
           'Authorization': `Bearer ${userId}`,
           'Content-Type': 'multipart/form-data',

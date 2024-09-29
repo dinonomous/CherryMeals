@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import axios from 'axios';
+require("dotenv").config();
 
 const RestaurantRegister = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ const RestaurantRegister = () => {
     setSuccess('');
 
     try {
-      const response = await axios.post('http://localhost:2560/api/v1/auth/restaurant/register', formData);
+      const response = await axios.post(`${process.env.APP_BE_URL}/api/v1/auth/restaurant/register`, formData);
       setSuccess(response.data.message);
       // Reset form after successful registration
       setFormData({

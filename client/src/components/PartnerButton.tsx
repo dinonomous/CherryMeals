@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
+require("dotenv").config();
 
 const PartnerButton = () => {
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
@@ -9,7 +10,7 @@ const PartnerButton = () => {
   useEffect(() => {
     const fetchRestaurantId = async () => {
       try {
-        const response = await fetch('http://localhost:2560/api/v1/auth/restaurant/checkAuth', {
+        const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/restaurant/checkAuth`, {
           method: 'GET',
           credentials: 'include',
         });

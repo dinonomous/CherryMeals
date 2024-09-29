@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import axios from 'axios';
+require("dotenv").config();
 
 interface CardProps {
   title: string;
@@ -34,7 +35,7 @@ const Card: React.FC<CardProps> = ({
     }
 
     try {
-        const response = await fetch(`http://localhost:2560/api/v1/users/${userId}/cart/${itemKey}`, {
+        const response = await fetch(`${process.env.APP_BE_URL}/api/v1/users/${userId}/cart/${itemKey}`, {
             method: 'POST',
             credentials: 'include',
             headers: {

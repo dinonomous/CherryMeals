@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+require("dotenv").config();
 
 const UserControls = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -8,7 +9,7 @@ const UserControls = () => {
   // Function to check if the user is authenticated
   const checkAuth = async () => {
     try {
-      const response = await fetch('http://localhost:2560/api/v1/auth/checkAuth', {
+      const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/checkAuth`, {
         method: 'GET',
         credentials: 'include', // Include cookies in the request
       });
@@ -33,7 +34,7 @@ const UserControls = () => {
   // Function to handle logout
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:2560/api/v1/auth/logout', {
+      const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/logout`, {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });

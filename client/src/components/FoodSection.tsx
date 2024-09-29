@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation"; // For redirection
 import Card from "./foodCard";
+require("dotenv").config();
 
 interface Food {
   _id: string;
@@ -52,8 +53,8 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
       try {
         const response = await axios.get(
           id
-            ? `http://localhost:2560/api/v1/restaurant/nofooditems/${id}/menue`
-            : "http://localhost:2560/api/v1/homepage/topfood"
+            ? `${process.env.APP_BE_URL}/api/v1/restaurant/nofooditems/${id}/menue`
+            : `${process.env.APP_BE_URL}/api/v1/homepage/topfood`
         );
         setTopFood(response.data);
         console.log(response.data);

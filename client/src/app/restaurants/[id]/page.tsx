@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import RestaurantCard from "../../../components/Reastrauntcard"; // Ensure the path is correct
 import FoodSection from "@/components/FoodSection";
+require("dotenv").config();
 
 const Restaurant: React.FC<{ params: { id: string } }> = ({ params }) => {
   const { id } = params; // Get the id from params
@@ -15,7 +16,7 @@ const Restaurant: React.FC<{ params: { id: string } }> = ({ params }) => {
     if (id) {
       const fetchRestaurant = async () => {
         try {
-          const response = await fetch(`http://localhost:2560/api/v1/restaurant/nofooditems/${id}`);
+          const response = await fetch(`${process.env.APP_BE_URL}/api/v1/restaurant/nofooditems/${id}`);
           if (!response.ok) {
             throw new Error("Failed to fetch restaurant");
           }

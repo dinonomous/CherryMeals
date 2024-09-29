@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+require("dotenv").config();
 
 type Order = {
   _id: string;
@@ -25,7 +26,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ params }) => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:2560/api/v1/users/${userId}/orders`);
+        const response = await axios.get(`${process.env.APP_BE_URL}/api/v1/users/${userId}/orders`);
         setOrders(response.data.orders);
       } catch (error) {
         setError('Failed to load orders.');
