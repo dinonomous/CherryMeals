@@ -50,7 +50,7 @@ const MainPage = () => {
   return (
     <div className="flex">
       <Sidebar isSidebarOpen={isSidebarOpen} setCurrentSection={setCurrentSection} />
-      <div className="flex-1 p-4 md:ml-64">
+      <div className="flex-1 p-4 box-border">
         <Header setIsSidebarOpen={setIsSidebarOpen} />
         {renderSection()}
       </div>

@@ -11,7 +11,7 @@ interface CardProps {
   rating: number;
   imageUrl: string;
   itemKey: string;
-  userId: string | null; // Add userId prop
+  userId: string | null;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -23,7 +23,7 @@ const Card: React.FC<CardProps> = ({
   rating,
   imageUrl,
   itemKey,
-  userId, // Accept userId
+  userId,
 }) => {
 
   const onAddToCart = async () => {
@@ -61,12 +61,13 @@ const Card: React.FC<CardProps> = ({
   return (
     <div className="max-w-[350px] flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70" key={itemKey}>
       <Image
-        src={imageUrl}
-        alt="Card Image"
-        width={350}
-        height={100}
-        className="w-full h-auto rounded-t-xl"
-      />
+  src={imageUrl}
+  alt="Card Image"
+  width={350}
+  height={100}
+  className="w-full h-96 rounded-t-xl object-cover"
+/>
+
       <div className="p-4 md:p-5">
         <h3 className="text-lg font-bold text-gray-800 dark:text-white">{title}</h3>
         <div className="flex items-center">

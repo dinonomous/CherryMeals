@@ -52,7 +52,7 @@ const RestaurantSchema = new Schema({
   },
   foodItems: [
     {
-      foodId: { type: String, ref: "Food", required: true },
+      foodId: { type: String, ref: "Food", required: false },
     },
   ],
   ordersQueue: [{ type: Schema.Types.ObjectId, ref: "Order" }],

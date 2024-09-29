@@ -1,9 +1,10 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 const PartnerButton = () => {
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
+  const router = useRouter(); // Use the router for manual navigation
 
   useEffect(() => {
     const fetchRestaurantId = async () => {
@@ -27,16 +28,25 @@ const PartnerButton = () => {
     fetchRestaurantId();
   }, []);
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    if (!restaurantId) {
+      e.preventDefault(); // Prevent navigation if no restaurant ID is available
+    } else {
+      router.push(`/restaurant/${restaurantId}/dashboard`); // Navigate to restaurant dashboard
+    }
+  };
+
   return (
     <>
       {restaurantId ? (
-        <Link
-          href={`/restaurant/${restaurantId}/dashboard`}
+        <a
+          href="#"
+          onClick={handleClick} // Add onClick handler for conditional navigation
           className="font-medium transition duration-300 ease-in-out text-black dark:text-whiteCustom hover:text-primary"
           aria-current="page"
         >
           Restaurant Dashboard
-        </Link>
+        </a>
       ) : (
         <span className="font-medium text-gray-400 dark:text-gray-400 hover:cursor-not-allowed">
           Restaurant Dashboard

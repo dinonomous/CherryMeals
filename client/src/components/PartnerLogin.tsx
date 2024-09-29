@@ -19,7 +19,7 @@ const LoginForm: React.FC = () => {
           "http://localhost:2560/api/v1/auth/checkAuth",
           {
             method: "GET",
-            credentials: "include", // Include cookies
+            credentials: "include", 
           }
         );
 

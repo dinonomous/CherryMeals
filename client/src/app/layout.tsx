@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import PrelineScript from "../components/PrelineScript";  
+import PrelineScript from "../components/PrelineScript";
 import NavBar from "@/components/NavBar";
 
 const geistSans = localFont({
@@ -9,7 +9,7 @@ const geistSans = localFont({
   variable: "--font-geist-sans",
   weight: "100 900",
 });
-const geistMono = localFont({ 
+const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
@@ -24,18 +24,17 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) { 
+}>) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased dark:bg-blackCustom bg-whiteCustom`}
+
       >
         <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3 dark:bg-neutral-800">
-
           <NavBar />
-
         </header>
-        <main className="dark:bg-blackCustom bg-whiteCustom w-screen text-gray-900 dark:text-whiteCustom">
+        <main className="dark:bg-blackCustom bg-whiteCustom mt-4 text-gray-900 dark:text-whiteCustom min-h-full box-border px-4">
           {children}
         </main>
         <footer className="dark:bg-blackCustom bg-whiteCustom">
@@ -167,7 +166,9 @@ export default function RootLayout({
 
               <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-2 sm:grid-cols-4">
                 <div className="text-center sm:text-left">
-                  <p className="text-lg font-medium text-black dark:text-whiteCustom dark:text-whiteCustom">About Us</p>
+                  <p className="text-lg font-medium text-black dark:text-whiteCustom dark:text-whiteCustom">
+                    About Us
+                  </p>
 
                   <nav className="mt-8">
                     <ul className="space-y-4 text-sm">
@@ -211,7 +212,9 @@ export default function RootLayout({
                 </div>
 
                 <div className="text-center sm:text-left">
-                  <p className="text-lg font-medium text-black dark:text-whiteCustom">Our Services</p>
+                  <p className="text-lg font-medium text-black dark:text-whiteCustom">
+                    Our Services
+                  </p>
 
                   <nav className="mt-8">
                     <ul className="space-y-4 text-sm">
@@ -299,7 +302,9 @@ export default function RootLayout({
                 </div>
 
                 <div className="text-center sm:text-left">
-                  <p className="text-lg font-medium text-black dark:text-whiteCustom">Contact Us</p>
+                  <p className="text-lg font-medium text-black dark:text-whiteCustom">
+                    Contact Us
+                  </p>
 
                   <ul className="mt-8 space-y-4 text-sm">
                     <li>

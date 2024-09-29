@@ -11,7 +11,7 @@ const PHONE_PE_HOST_URL = process.env.PHONE_PE_HOST_URL;
 const SALT_INDEX = process.env.SALT_INDEX;
 const SALT_KEY = process.env.SALT_KEY;
 const APP_BE_URL = 'http://localhost:2560';
-const APP_FE_URL = 'http://localhost:2560';
+const APP_FE_URL = 'http://localhost:3000';
 
 // Proceed to payment route (initiate payment and redirect)
 const initiatePayment = async (req, res) => {
@@ -117,7 +117,7 @@ const validatePayment = async (req, res) => {
       } else {
         console.error("User not found for the order:", orderId);
       }
-      res.redirect(`${APP_FE_URL}/payment/success`);
+      res.redirect(`${APP_FE_URL}/user/${order.userId}/orders`);
     } else {
       res.redirect(`${APP_FE_URL}/payment/failure`);
     }

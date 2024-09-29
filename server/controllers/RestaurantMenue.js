@@ -18,7 +18,7 @@ const menue = async (req, res) => {
         }
         return {
           name: food.name,
-          imageUrl: getSignedImageUrl(req.params.id, foodItem.foodId),
+          imageUrl: food.imageUrl,
           price: food.price,
           description: food.description,
           rating: food.rating,

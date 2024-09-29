@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Updated import for Next.js 13
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,22 +9,19 @@ const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter(); // Use Next.js router for redirection
+  const [loadingImage, setLoadingImage] = useState(true); // State to track image loading
+  const router = useRouter();
 
   // Check if the user is already authenticated
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:2560/api/v1/auth/checkAuth",
-          {
-            method: "GET",
-            credentials: "include", // Include cookies
-          }
-        );
+        const response = await fetch("http://localhost:2560/api/v1/auth/checkAuth", {
+          method: "GET",
+          credentials: "include",
+        });
 
         if (response.ok) {
-          // User is authenticated, redirect to the homepage
           router.push("/");
         }
       } catch (err) {
@@ -45,7 +42,7 @@ const LoginForm: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-        credentials: "include", // Important for sending cookies
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -54,8 +51,6 @@ const LoginForm: React.FC = () => {
 
       const data = await response.json();
       console.log("Login successful!", data);
-
-      // After successful login, redirect to the home page
       router.push("/");
     } catch (err) {
       console.error("Login error:", err);
@@ -66,7 +61,7 @@ const LoginForm: React.FC = () => {
   return (
     <>
       <span className="flex h-[80vh]">
-        <div className="w-full md:w-1/2 px-7 flex flex-col justify-center box-border">
+        <div className="w-full md:w-1/2 pr-7 flex flex-col justify-center box-border">
           <h2 className="font-bold text-blackCustom dark:text-whiteCustom text-center text-4xl">
             Login
           </h2>
@@ -75,10 +70,7 @@ const LoginForm: React.FC = () => {
           </p>
           <form className="mt-6" onSubmit={handleSubmit}>
             <div>
-              <label
-                className="block text-blackCustom dark:text-whiteCustom"
-                htmlFor="email"
-              >
+              <label className="block text-blackCustom dark:text-whiteCustom" htmlFor="email">
                 Email Address
               </label>
               <input
@@ -93,10 +85,7 @@ const LoginForm: React.FC = () => {
             </div>
 
             <div className="mt-4">
-              <label
-                className="block text-blackCustom dark:text-whiteCustom"
-                htmlFor="password"
-              >
+              <label className="block text-blackCustom dark:text-whiteCustom" htmlFor="password">
                 Password
               </label>
               <input
@@ -136,11 +125,7 @@ const LoginForm: React.FC = () => {
           </div>
 
           <button className="bg-white border py-2 w-full rounded-xl mt-5 flex justify-center items-center text-sm hover:scale-105 duration-300">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6"
-              viewBox="0 0 48 48"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 48 48">
               <defs>
                 <path
                   id="a"
@@ -151,21 +136,9 @@ const LoginForm: React.FC = () => {
                 <use xlinkHref="#a" overflow="visible" />
               </clipPath>
               <path clipPath="url(#b)" fill="#FBBC05" d="M0 37V11l17 13z" />
-              <path
-                clipPath="url(#b)"
-                fill="#EA4335"
-                d="M0 11l17 13 7-6.1L48 14V0H0z"
-              />
-              <path
-                clipPath="url(#b)"
-                fill="#34A853"
-                d="M0 37l30-23 7.9 1L48 0v48H0z"
-              />
-              <path
-                clipPath="url(#b)"
-                fill="#4285F4"
-                d="M48 48L17 24l-4-3 35-10z"
-              />
+              <path clipPath="url(#b)" fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z" />
+              <path clipPath="url(#b)" fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z" />
+              <path clipPath="url(#b)" fill="#4285F4" d="M48 48L17 24l-4-3 35-10z" />
             </svg>
             <span className="ml-4">Login with Google</span>
           </button>
@@ -183,36 +156,45 @@ const LoginForm: React.FC = () => {
           </div>
           <div className="mt-7 grid grid-cols-3 items-center text-gray-500">
             <hr className="border-gray-500" />
-            <p className="text-center text-sm">Are you a Partner ?</p>
+            <p className="text-center text-sm">Are you a Partner?</p>
             <hr className="border-gray-500" />
           </div>
           <div className="py-4 items-center justify-center flex">
-          <Link href="/partnerlogin">
-            <button
-              type="button"
-              className="text-white bg-primary hover:bg-tertiary hover:text-black focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Partner Login
-            </button>
+            <Link href="/partnerlogin">
+              <button
+                type="button"
+                className="text-white bg-primary hover:bg-tertiary hover:text-black focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Partner Login
+              </button>
             </Link>
             <Link href="/partnerlogin">
-            <button
-              type="button"
-              className="text-white bg-primary hover:bg-tertiary hover:text-black focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Partner Sign up
-            </button>
+              <button
+                type="button"
+                className="text-white bg-primary hover:bg-tertiary hover:text-black focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Partner Sign up
+              </button>
             </Link>
           </div>
         </div>
 
         <div className="relative w-1/2 hidden md:block h-full">
+          {loadingImage && (
+            <div role="status" className="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+              <svg className="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                <path d="M0 2.5C0 1.1 1.1 0 2.5 0h11C14.9 0 16 1.1 16 2.5v15C16 18.9 14.9 20 13.5 20h-11C1.1 20 0 18.9 0 17.5v-15ZM2.5 1C1.7 1 1 1.7 1 2.5v15c0 .8.7 1.5 1.5 1.5h11c.8 0 1.5-.7 1.5-1.5v-15c0-.8-.7-1.5-1.5-1.5h-11Z"/>
+              </svg>
+              <span className="sr-only">Loading...</span>
+            </div>
+          )}
           <Image
             src="/assets/login.jpg"
-            alt="Scroll Left"
+            alt="Login Banner"
             layout="fill"
             objectFit="cover"
-            className="rounded-xl"
+            onLoad={() => setLoadingImage(false)} // Update loading state on image load
+            className="rounded-l-lg"
           />
         </div>
       </span>
