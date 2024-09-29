@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 const UserModel = require("../models/UserSchema");
+const RestaurantModel = require("../models/RestaurantSchema"); // Add restaurant model
 const { secretOrKey } = require('../config/keys');
 
 // Middleware for extracting the token from cookies
 const cookieExtractor = (req) => {
-    console.log(req.cookies)
   return req && req.cookies ? req.cookies['token'] : null;
 };
 
@@ -13,7 +13,7 @@ const jwtAuthMiddleware = async (req, res, next) => {
   try {
     // Extract the token from the request cookies
     const token = cookieExtractor(req);
-    
+
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -24,24 +24,39 @@ const jwtAuthMiddleware = async (req, res, next) => {
     // Verify the token
     const decoded = jwt.verify(token, secretOrKey);
 
-    // Check if the user is an "external" user
-    if (decoded.userType === "external") {
-      return next(); // Skip user lookup for external users
-    }
-
-    // Lookup the user in the database using the id from the JWT
-    const user = await UserModel.findById(decoded.id);
-
-    if (!user) {
+    // Check userType (either 'user' or 'restaurant')
+    if (decoded.userType === 'user') {
+      // Lookup the user in the database
+      const user = await UserModel.findById(decoded.id);
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Unauthorized: User not found',
+        });
+      }
+      // Attach user object to request
+      req.user = user;
+    } else if (decoded.userType === 'restaurant') {
+      // Lookup the restaurant in the database
+      const restaurant = await RestaurantModel.findById(decoded.id);
+      if (!restaurant) {
+        return res.status(401).json({
+          success: false,
+          message: 'Unauthorized: Restaurant not found',
+        });
+      }
+      // Attach restaurant object to request
+      req.restaurant = restaurant;
+    } else {
+      // Invalid userType in token
       return res.status(401).json({
         success: false,
-        message: 'Unauthorized: User not found',
+        message: 'Unauthorized: Invalid user type',
       });
     }
 
-    // Attach the user to the request object
-    req.user = user;
-    next(); // Proceed to the next middleware/route handler
+    // Proceed to the next middleware/route handler
+    next();
 
   } catch (error) {
     console.error('JWT Authentication error:', error);

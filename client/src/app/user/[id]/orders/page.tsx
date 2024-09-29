@@ -7,6 +7,7 @@ type Order = {
   totalAmount: number;
   status: string;
   createdAt: string;
+  paymentLink: string
 };
 
 interface OrdersPageProps {
@@ -51,6 +52,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ params }) => {
             <p>Total Amount: ${order.totalAmount}</p>
             <p>Status: {order.status}</p>
             <p>Ordered on: {new Date(order.createdAt).toLocaleDateString()}</p>
+            <a href={order.paymentLink} className="text-blue-500 underline">{order.paymentLink}</a>
             <a href={`/orders/${order._id}`} className="text-blue-500 underline">
               View Details
             </a>

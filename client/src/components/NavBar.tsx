@@ -4,8 +4,10 @@
 import UserControols from "../components/UserControols";
 import Link from "next/link";
 import Cartbutton from "@/components/Cartbutton";
+import PartnerButton from "./PartnerButton";
 import ThemeToggleButton from "../components/ThemeToggleButton";
 import { usePathname } from 'next/navigation';
+import OrderButton from "./OrederBotton";
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -77,9 +79,7 @@ export default function NavBar() {
               aria-labelledby="hs-navbar-alignment-collapse"
             >
               <div className="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
-                <Link href="/user" className="font-medium text-black dark:text-whiteCustom focus:outline-none">
-                  User
-                </Link>
+                <PartnerButton />
                 <Link
                   href="/"
                   className="font-medium text-black dark:text-whiteCustom focus:outline-none"
@@ -88,13 +88,7 @@ export default function NavBar() {
                   Home
                 </Link>
                 <Cartbutton />
-                <Link
-                  href="/"
-                  className="font-medium text-black dark:text-whiteCustom focus:outline-none"
-                  aria-current="page"
-                >
-                  Orders
-                </Link>
+                <OrderButton />
                 <a
                   className="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500"
                   href="#"

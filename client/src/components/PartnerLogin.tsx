@@ -39,7 +39,7 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:2560/api/v1/auth/login", {
+      const response = await fetch("http://localhost:2560/api/v1/auth/restaurant/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,9 +66,9 @@ const LoginForm: React.FC = () => {
   return (
     <>
       <span className="flex h-[80vh]">
-        <div className="w-full md:w-1/2 px-7 flex flex-col justify-center box-border">
+        <div className="w-full max-w-2xl px-7 flex flex-col justify-center box-border m-auto">
           <h2 className="font-bold text-blackCustom dark:text-whiteCustom text-center text-4xl">
-            Login
+            Partner Login
           </h2>
           <p className="mt-4 text-blackCustom dark:text-whiteCustom text-center text-xl">
             If you have an account, please login
@@ -172,7 +172,7 @@ const LoginForm: React.FC = () => {
 
           <div className="text-sm flex justify-between items-center mt-3">
             <p>If you don't have an account...</p>
-            <Link href="/register">
+            <Link href="/partnerregister">
               <button
                 type="button"
                 className="text-white bg-primary hover:bg-tertiary hover:text-black focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -181,39 +181,6 @@ const LoginForm: React.FC = () => {
               </button>
             </Link>
           </div>
-          <div className="mt-7 grid grid-cols-3 items-center text-gray-500">
-            <hr className="border-gray-500" />
-            <p className="text-center text-sm">Are you a Partner ?</p>
-            <hr className="border-gray-500" />
-          </div>
-          <div className="py-4 items-center justify-center flex">
-          <Link href="/partnerlogin">
-            <button
-              type="button"
-              className="text-white bg-primary hover:bg-tertiary hover:text-black focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Partner Login
-            </button>
-            </Link>
-            <Link href="/partnerlogin">
-            <button
-              type="button"
-              className="text-white bg-primary hover:bg-tertiary hover:text-black focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Partner Sign up
-            </button>
-            </Link>
-          </div>
-        </div>
-
-        <div className="relative w-1/2 hidden md:block h-full">
-          <Image
-            src="/assets/login.jpg"
-            alt="Scroll Left"
-            layout="fill"
-            objectFit="cover"
-            className="rounded-xl"
-          />
         </div>
       </span>
     </>

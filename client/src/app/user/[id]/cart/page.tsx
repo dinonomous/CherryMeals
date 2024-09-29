@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import CartItem from "@/components/CartItem";
+import axios from "axios";
 
 interface CartItemType {
   foodId: string;
@@ -148,30 +149,60 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
     }
   };
 
-  // Handle checkout
   const handleCheckout = async () => {
     if (!userId) {
       setError("User information is missing.");
       return;
     }
-
+  
     // Calculate total amount from cart items
     const totalAmount = calculateTotal(); // Get total amount
-
-    // Replace with actual restaurantId if you have it stored in the state or props
+  
+    // Ensure restaurantId is available
     const restaurantId = cartItems[0]?.restaurantId; // Assuming all items are from the same restaurant
-
     if (!restaurantId) {
       setError("Restaurant information is missing.");
       return;
     }
-
-    // Redirect to the payment API
-    const paymentURL = `http://localhost:2560/api/v1/users/pay?amount=${totalAmount}&userId=${userId}&restaurantId=${restaurantId}`;
-
-    // Redirect the user to the payment URL
-    window.location.href = paymentURL;
+  
+    try {
+      // Create the order by calling the backend
+      const orderData = {
+        userId,
+        restaurantId,
+        totalAmount,
+        items: cartItems.map(item => ({
+          foodId: item.foodId,
+          quantity: item.quantity,
+          price: item.price
+        }))
+      };
+  
+      const response = await axios.post(
+        `http://localhost:2560/api/v1/users/${userId}/orders`,
+        orderData
+      );
+  
+      // If order creation is successful
+      if (response.status === 201) {
+        const orders = response.data.orders;
+  
+        // Store order JSON data in localStorage to be used on the payment page
+        localStorage.setItem("orderData", JSON.stringify(orders));
+  
+        // Redirect to the payment page
+        const redirectToPaymentPage = `http://localhost:3000/user/${userId}/payment`;
+        window.location.href = redirectToPaymentPage;
+      } else {
+        setError("Failed to create order. Please try again.");
+      }
+    } catch (error) {
+      console.error("Order creation error:", error);
+      setError("An error occurred during order creation.");
+    }
   };
+  
+
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
