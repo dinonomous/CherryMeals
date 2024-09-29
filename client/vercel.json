@@ -9,14 +9,15 @@
     "routes": [
       {
         "src": "/api/(.*)",
-        "dest": "/api/$1"
+        "dest": "/src/pages/api/$1"
       },
       {
         "src": "/(.*)",
-        "dest": "/$1"
+        "dest": "/src/app/$1"
       }
     ],
     "env": {
       "MY_ENV_VARIABLE": "value"
     }
   }
+  
