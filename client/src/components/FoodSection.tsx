@@ -107,6 +107,8 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
   const handleAddToCart = (foodId: string) => {
     if (!uid) {
       router.push("/login");
+    } else {
+      console.log(`Adding food with ID ${foodId} to cart`);
     }
   };
 

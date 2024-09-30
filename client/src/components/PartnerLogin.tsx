@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Updated import for Next.js 13
 import Link from "next/link";
 
-
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +18,7 @@ const LoginForm: React.FC = () => {
           `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/checkAuth`,
           {
             method: "GET",
-            credentials: "include", 
+            credentials: "include",
           }
         );
 
@@ -39,14 +38,17 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-        credentials: "include", // Important for sending cookies
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+          credentials: "include", // Important for sending cookies
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Login failed. Please check your credentials.");
@@ -171,7 +173,7 @@ const LoginForm: React.FC = () => {
           </button>
 
           <div className="text-sm flex justify-between items-center mt-3">
-            <p>If you don't have an account...</p>
+            <p>If you don&apos;t have an account...</p>
             <Link href="/partnerregister">
               <button
                 type="button"

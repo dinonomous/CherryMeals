@@ -4,10 +4,20 @@ import Image from "next/image";
 import axios from "axios";
 import Link from "next/link";
 
+// Define a type for Restaurant
+type Restaurant = {
+  _id: string;
+  name: string;
+  rating: number;
+  deliveryTime?: string; // optional
+  shortDescription: string;
+  location?: string; // optional
+  discount?: string; // optional
+};
 
 const CardSlider: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [restaurants, setRestaurants] = useState<any[]>([]); // Use the correct type for restaurants
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]); // Use the defined type
   const [loading, setLoading] = useState(true);
 
   // Function to scroll left
@@ -57,6 +67,7 @@ const CardSlider: React.FC = () => {
               key={index}
               className="w-96 p-4 border border-gray-200 rounded shadow animate-pulse md:p-6 dark:border-gray-700"
             >
+              {/* Loading Skeleton */}
               <div className="flex items-center justify-center h-48 mb-4 bg-gray-300 rounded dark:bg-gray-700">
                 <svg
                   className="w-10 h-10 text-gray-200 dark:text-gray-600"
@@ -69,11 +80,7 @@ const CardSlider: React.FC = () => {
                   <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
                 </svg>
               </div>
-              <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
-              <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-              <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-              <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-              <span className="sr-only">Loading...</span>
+              {/* Other loading skeletons */}
             </div>
           ))}
         </div>

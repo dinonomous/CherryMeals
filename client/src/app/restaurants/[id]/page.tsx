@@ -12,7 +12,16 @@ interface Restaurant {
   rating: number;
 }
 
-const Restaurant: React.FC<{ params: { id: string } }> = ({ params }) => {
+// Define Restaurant Response to avoid any type
+interface RestaurantResponse {
+  _id: string;
+  name: string;
+  address: string;
+  description: string;
+  rating: number;
+}
+
+const RestaurantPage: React.FC<{ params: { id: string } }> = ({ params }) => {
   const { id } = params; // Get the id from params
 
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
@@ -23,11 +32,13 @@ const Restaurant: React.FC<{ params: { id: string } }> = ({ params }) => {
     if (id) {
       const fetchRestaurant = async () => {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/nofooditems/${id}`);
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/nofooditems/${id}`
+          );
           if (!response.ok) {
             throw new Error("Failed to fetch restaurant");
           }
-          const data = await response.json();
+          const data: RestaurantResponse = await response.json(); // Use RestaurantResponse type here
           setRestaurant(data); 
         } catch (err) {
           if (err instanceof Error) {
@@ -35,14 +46,14 @@ const Restaurant: React.FC<{ params: { id: string } }> = ({ params }) => {
           } else {
             setError("An unknown error occurred");
           }
-         } finally {
+        } finally {
           setLoading(false);
         }
       };
 
       fetchRestaurant();
     }
-  }, [id]); 
+  }, [id]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -50,12 +61,12 @@ const Restaurant: React.FC<{ params: { id: string } }> = ({ params }) => {
 
   return (
     <>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-      <RestaurantCard key={restaurant._id} restaurant={restaurant} />
-    </div>
-    <FoodSection id={id}/>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+        <RestaurantCard key={restaurant._id} restaurant={restaurant} />
+      </div>
+      <FoodSection id={id} />
     </>
   );
 };
 
-export default Restaurant;
+export default RestaurantPage;
