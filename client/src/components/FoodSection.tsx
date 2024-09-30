@@ -13,7 +13,6 @@ interface Food {
   rating?: number;
   imageUrl?: string;
   itemKey: string;
-  id: String;
 }
 
 const getCookie = (cookieName: string) => {
@@ -35,7 +34,7 @@ const getCookie = (cookieName: string) => {
 const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
   const [topFood, setTopFood] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
-  const [uid, setUid] = useState<string | null>(null); 
+  const [uid, setUid] = useState<string | null>(null);
   const router = useRouter();
 
   // Check for user ID from cookies on component mount
@@ -56,7 +55,6 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
             : `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/homepage/topfood`
         );
         setTopFood(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching food items:", error);
       } finally {
@@ -73,6 +71,7 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
       <div className="max-w-7xl mx-auto p-2 my-12">
         <h2 className="text-xl">Favorite Foods</h2>
         <div className="foodsection flex flex-wrap gap-8 items-center justify-center my-8"></div>
+        {/* Loading Skeleton */}
         <div className="max-w-7xl mx-auto p-2">
           <div className="flex gap-8 mt-4 overflow-x-auto no-scrollbar scroll-snap-x">
             {Array.from({ length: 3 }).map((_, index) => (
@@ -110,7 +109,6 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
       router.push("/login");
     }
   };
-  console.log(topFood);
 
   return (
     <div className="max-w-7xl mx-auto p-2 my-12">
@@ -118,16 +116,16 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
       <div className="foodsection flex flex-wrap gap-8 md:gap-4 items-center justify-center my-8">
         {topFood.map((food) => (
           <Card
-            key={food.id || food._id} 
+            key={food._id} // Ensure unique key
             title={food.name}
-            imageUrl={food.imageUrl} 
-            restaurantName="The Spice House" 
+            imageUrl={food.imageUrl || ""} // Ensure imageUrl is always provided
+            restaurantName="The Spice House"
             description={food.description}
             price={`Rs ${food.price.toFixed(2) || "0.00"}`}
-            deliveryTime="15-20 mins"
+            deliveryTime="15-20 mins" // Provide default delivery time
             rating={food.rating || 0}
-            itemKey={food.id || food._id} 
-            userId={uid} 
+            itemKey={food._id}
+            userId={uid}
             onAddToCart={handleAddToCart}
           />
         ))}

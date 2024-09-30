@@ -29,7 +29,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ params }) => {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/users/${userId}/orders`);
         setOrders(response.data.orders);
       } catch (error) {
-        setError('Failed to load orders.');
+        setError(`${error} Failed to load orders.`);
       } finally {
         setLoading(false);
       }

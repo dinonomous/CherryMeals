@@ -14,23 +14,22 @@ const RestaurantRegister = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
   };
-
-  const handleSubmit = async (e) => {
+  
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-
+    
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/register`, formData);
       setSuccess(response.data.message);
-      // Reset form after successful registration
       setFormData({
         name: '',
         email: '',
@@ -39,7 +38,13 @@ const RestaurantRegister = () => {
         address: '',
       });
     } catch (err) {
-      setError(err.response.data.message);
+      if (err instanceof Error) {
+        // If it's an instance of Error, access the message
+        setError(err.message);
+      } else {
+        // Handle other types of errors (e.g., non-Error objects)
+        setError("An unknown error occurred");
+      }
     }
   };
 

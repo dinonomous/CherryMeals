@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
-import RestaurantCard from "./ReastrauntcardR";
+import RestaurantCard from "./ReastrauntcardR"; // Ensure this path is correct
 import axios from "axios";
-import { useRouter } from 'next/navigation';
 
-const FoodManagementSection = () => {
-  const router = useRouter();
+// Define the Food type
+interface Food {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+  imageUrl: string;
+  rating: number;
+}
+
+const FoodManagementSection: React.FC = () => {
   const [foodItems, setFoodItems] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
@@ -13,10 +21,12 @@ const FoodManagementSection = () => {
     name: "",
     price: "",
     description: "",
-    image: null, // State for the image file
-    rating: 0, // Added rating state
+    image: null as File | null, // Ensure correct type for the image
+    rating: 0, 
   });
+  const [error, setError] = useState<string | null>(null);
 
+  // Fetch restaurant ID and check authentication
   useEffect(() => {
     const fetchRestaurantId = async () => {
       try {
@@ -36,87 +46,100 @@ const FoodManagementSection = () => {
         }
       } catch (error) {
         console.error("Error fetching restaurant ID:", error);
+        setError("Failed to authenticate. Please try again.");
       }
     };
 
     fetchRestaurantId();
   }, []);
 
-  const fetchFoodItems = async () => {
-    if (userId) {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/nofooditems/${userId}/menue`
-        );
-        setFoodItems(response.data);
-      } catch (error) {
-        console.error("Error fetching food items:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
+  // Fetch food items once userId is available
   useEffect(() => {
-    fetchFoodItems(); // Fetch food items when userId changes
-  }, [userId]);
+    const fetchFoodItems = async () => {
+      if (userId) {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/nofooditems/${userId}/menu`
+          );
+          setFoodItems(response.data);
+        } catch (error) {
+          console.error("Error fetching food items:", error);
+          setError("Failed to load food items.");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
 
+    fetchFoodItems();
+  }, [userId]); // Fetch when userId changes
+
+  // Handle food item removal
   const handleRemove = async (itemKey: string) => {
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/deletefood/${itemKey}`, {
-        withCredentials: true,
-      });
-
-      setFoodItems((prevItems) =>
-        prevItems.filter((item) => item.itemKey !== itemKey)
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/deletefood/${itemKey}`,
+        { withCredentials: true }
       );
-      fetchFoodItems();
+      setFoodItems((prevItems) => prevItems.filter((item) => item.id !== itemKey));
     } catch (error) {
       console.error("Error removing food item:", error);
+      setError("Failed to remove food item.");
     }
-
   };
 
   // Handle adding a new food item
-  const handleAddFood = async (e) => {
+  const handleAddFood = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the default form submission
 
     const formData = new FormData();
     formData.append("name", newFood.name);
     formData.append("price", newFood.price);
     formData.append("description", newFood.description);
-    formData.append("rating", newFood.rating); // Append rating
+    formData.append("rating", newFood.rating.toString());
     if (newFood.image) {
       formData.append("image", newFood.image); // Append the image file
     }
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/addfood/${userId}`, formData, {
-        headers: {
-          'Authorization': `Bearer ${userId}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/addfood/${userId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${userId}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       setFoodItems((prevItems) => [...prevItems, response.data]);
       setNewFood({ name: "", price: "", description: "", image: null, rating: 0 }); // Clear form
       setShowAddFoodForm(false); 
-      fetchFoodItems();
     } catch (error) {
       console.error("Error adding food item:", error);
+      setError("Failed to add food item.");
     }
   };
 
-  const handleImageChange = (e) => {
-    setNewFood({ ...newFood, image: e.target.files[0] }); // Set the selected file
+  // Handle image file selection
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setNewFood({ ...newFood, image: e.target.files[0] });
+    }
   };
 
-  const handleRatingChange = (e) => {
-    setNewFood({ ...newFood, rating: parseFloat(e.target.value) }); // Update the rating state
+  // Handle rating input change
+  const handleRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewFood({ ...newFood, rating: parseFloat(e.target.value) });
   };
 
   if (loading) {
     return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
   }
 
   return (
@@ -131,11 +154,10 @@ const FoodManagementSection = () => {
               restaurantName="The Spice House"
               description={food.description}
               price={`Rs ${food.price}`}
-              deliveryTime="15-20 mins"
               rating={food.rating || 0}
               imageUrl={food.imageUrl}
               itemKey={food.id}
-              onRemove={handleRemove}
+              onRemove={() => handleRemove(food.id)}
             />
           ))}
           <div
@@ -186,8 +208,8 @@ const FoodManagementSection = () => {
               value={newFood.rating}
               onChange={handleRatingChange}
               min="0"
-              max="5" // Assuming the rating is out of 5
-              step="0.1" // Allows decimal ratings
+              max="5"
+              step="0.1"
               required
               className="border rounded p-1 w-full mb-2"
             />

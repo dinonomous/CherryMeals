@@ -4,11 +4,18 @@ import React, { useEffect, useState } from "react";
 import RestaurantCard from "../../../components/Reastrauntcard"; // Ensure the path is correct
 import FoodSection from "@/components/FoodSection";
 
+interface Restaurant {
+  _id: string;
+  name: string;
+  address: string;
+  description: string;
+  rating: number;
+}
 
 const Restaurant: React.FC<{ params: { id: string } }> = ({ params }) => {
   const { id } = params; // Get the id from params
 
-  const [restaurant, setRestaurant] = useState<any>(null);
+  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,8 +30,12 @@ const Restaurant: React.FC<{ params: { id: string } }> = ({ params }) => {
           const data = await response.json();
           setRestaurant(data); 
         } catch (err) {
-          setError(err.message);
-        } finally {
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError("An unknown error occurred");
+          }
+         } finally {
           setLoading(false);
         }
       };
