@@ -23,22 +23,21 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false } // Set to true in production with HTTPS
 }));
+// Middleware for parsing JSON and URL-encoded data
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 // CORS Configuration - Allow credentials and specify origin
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://cherrymeals.vercel.app'],
+  origin: 'https://cherrymeals.vercel.app',
   credentials: true
 }));
 
-// Test route
-app.get("/", (req, res) => {
-  res.send("Hello, Express!");
-});
+// Connect to the database
+connectDB();
 
-// Routes
+// Use routes
 app.use("/api/v1/homepage", HomepageRoutes);
 app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/auth", AuthRoutes);
