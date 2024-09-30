@@ -69,10 +69,10 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(payload, secretOrKey, { expiresIn: "1d" });
 
     const cookieOptions = {
-      httpOnly: true,
+      httpOnly: false,
       maxAge: 86400000,
-      sameSite: process.env.NODE_ENV === "development" ? "Lax" : "None",
-      secure: process.env.NODE_ENV !== "development",
+      sameSite: "None",
+      secure: true,
     };
 
     res.cookie("restaurantId", token, cookieOptions);
