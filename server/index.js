@@ -29,8 +29,8 @@ app.use(cookieParser());
 
 // CORS Configuration - Allow credentials and specify origin
 app.use(cors({
-    origin: process.env.APP_FE_URL,
-    credentials: true,
+  origin: ['http://localhost:3000', 'https://cherrymeals.vercel.app'],
+  credentials: true
 }));
 
 // Test route

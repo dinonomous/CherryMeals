@@ -220,7 +220,7 @@ router.post("/check-email", async (req, res) => {
 });
 
 router.get("/checkAuth", (req, res) => {
-  const token = req.cookies.token; // Get the token from cookies
+  const token = req.cookies.token;
 
   if (!token) {
     return res.status(401).send({
