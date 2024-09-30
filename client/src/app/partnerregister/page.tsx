@@ -29,7 +29,7 @@ const RestaurantRegister = () => {
     setSuccess('');
 
     try {
-      const response = await axios.post(`${process.env.APP_BE_URL}/api/v1/auth/restaurant/register`, formData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/register`, formData);
       setSuccess(response.data.message);
       // Reset form after successful registration
       setFormData({

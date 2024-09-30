@@ -16,7 +16,7 @@ const Restaurant: React.FC<{ params: { id: string } }> = ({ params }) => {
     if (id) {
       const fetchRestaurant = async () => {
         try {
-          const response = await fetch(`${process.env.APP_BE_URL}/api/v1/restaurant/nofooditems/${id}`);
+          const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/nofooditems/${id}`);
           if (!response.ok) {
             throw new Error("Failed to fetch restaurant");
           }

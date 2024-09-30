@@ -35,7 +35,7 @@ const Card: React.FC<CardProps> = ({
     }
 
     try {
-        const response = await fetch(`${process.env.APP_BE_URL}/api/v1/users/${userId}/cart/${itemKey}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/users/${userId}/cart/${itemKey}`, {
             method: 'POST',
             credentials: 'include',
             headers: {

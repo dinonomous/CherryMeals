@@ -10,7 +10,7 @@ const PartnerButton = () => {
   useEffect(() => {
     const fetchRestaurantId = async () => {
       try {
-        const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/restaurant/checkAuth`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/checkAuth`, {
           method: 'GET',
           credentials: 'include',
         });

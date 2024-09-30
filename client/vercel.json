@@ -6,12 +6,6 @@
         "use": "@vercel/next"
       }
     ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/src/app/$1"
-      }
-    ],
     "env": {
       "MY_ENV_VARIABLE": "value"
     }

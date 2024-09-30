@@ -34,7 +34,7 @@ const RegistrationForm: React.FC = () => {
       
     try {
         console.log(userData);
-      const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/register`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

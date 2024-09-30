@@ -33,7 +33,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
   // Fetch the cart items when the component is mounted
   const fetchCartItems = async () => {
     if (userId) {
-      const API_URL = `${process.env.APP_BE_URL}/api/v1/users/${userId}/cart`;
+      const API_URL = `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/users/${userId}/cart`;
 
       try {
         const response = await fetch(API_URL, {
@@ -72,7 +72,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
 
   // Helper function to send updated cart to the server
   const updateCartOnServer = async (updatedCart: CartItemType[]) => {
-    const API_URL = `${process.env.APP_BE_URL}/api/v1/users/${userId}/cart`;
+    const API_URL = `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/users/${userId}/cart`;
 
     try {
       const response = await fetch(API_URL, {
@@ -123,7 +123,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
 
   // Handle item removal
   const handleRemove = async (id: string) => {
-    const API_URL = `${process.env.APP_BE_URL}/api/v1/users/${userId}/cart/${id}`;
+    const API_URL = `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/users/${userId}/cart/${id}`;
 
     try {
       const response = await fetch(API_URL, {
@@ -180,7 +180,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
       };
   
       const response = await axios.post(
-        `${process.env.APP_BE_URL}/api/v1/users/${userId}/orders`,
+        `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/users/${userId}/orders`,
         orderData
       );
   

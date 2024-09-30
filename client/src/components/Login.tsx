@@ -17,7 +17,7 @@ const LoginForm: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/checkAuth`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/checkAuth`, {
           method: "GET",
           credentials: "include",
         });
@@ -37,7 +37,7 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

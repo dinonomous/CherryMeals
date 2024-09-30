@@ -17,7 +17,7 @@ const LoginForm: React.FC = () => {
     const checkAuth = async () => {
       try {
         const response = await fetch(
-          `${process.env.APP_BE_URL}/api/v1/auth/checkAuth`,
+          `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/checkAuth`,
           {
             method: "GET",
             credentials: "include", 
@@ -40,7 +40,7 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/restaurant/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -39,7 +39,7 @@ const PaymentPage = () => {
       const orderId = order._id;
 
       // Redirect to the initiate payment URL with the amount as a query parameter
-      router.push(`${process.env.APP_BE_URL}/api/v1/users/proceed/${orderId}?amount=${formattedAmount}`);
+      router.push(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/users/proceed/${orderId}?amount=${formattedAmount}`);
     }
   };
 

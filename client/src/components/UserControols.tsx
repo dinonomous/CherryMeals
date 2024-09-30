@@ -9,7 +9,7 @@ const UserControls = () => {
   // Function to check if the user is authenticated
   const checkAuth = async () => {
     try {
-      const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/checkAuth`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/checkAuth`, {
         method: 'GET',
         credentials: 'include', // Include cookies in the request
       });
@@ -34,7 +34,7 @@ const UserControls = () => {
   // Function to handle logout
   const handleLogout = async () => {
     try {
-      const response = await fetch(`${process.env.APP_BE_URL}/api/v1/auth/logout`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/logout`, {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });

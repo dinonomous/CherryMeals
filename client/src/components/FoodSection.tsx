@@ -53,8 +53,8 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
       try {
         const response = await axios.get(
           id
-            ? `${process.env.APP_BE_URL}/api/v1/restaurant/nofooditems/${id}/menue`
-            : `${process.env.APP_BE_URL}/api/v1/homepage/topfood`
+            ? `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/nofooditems/${id}/menue`
+            : `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/homepage/topfood`
         );
         setTopFood(response.data);
         console.log(response.data);

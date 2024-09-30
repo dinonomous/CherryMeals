@@ -35,7 +35,7 @@ const CardSlider: React.FC = () => {
     const fetchRestaurants = async () => {
       try {
         const response = await axios.get(
-          `${process.env.APP_BE_URL}/api/v1/homepage/nofooditems`
+          `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/homepage/nofooditems`
         );
         setRestaurants(response.data);
       } catch (error) {

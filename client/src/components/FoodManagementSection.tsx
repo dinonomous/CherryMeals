@@ -22,7 +22,7 @@ const FoodManagementSection = () => {
     const fetchRestaurantId = async () => {
       try {
         const response = await fetch(
-          `${process.env.APP_BE_URL}/api/v1/auth/restaurant/checkAuth`,
+          `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/checkAuth`,
           {
             method: "GET",
             credentials: "include",
@@ -47,7 +47,7 @@ const FoodManagementSection = () => {
     if (userId) {
       try {
         const response = await axios.get(
-          `${process.env.APP_BE_URL}/api/v1/restaurant/nofooditems/${userId}/menue`
+          `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/nofooditems/${userId}/menue`
         );
         setFoodItems(response.data);
       } catch (error) {
@@ -64,7 +64,7 @@ const FoodManagementSection = () => {
 
   const handleRemove = async (itemKey: string) => {
     try {
-      await axios.delete(`${process.env.APP_BE_URL}/api/v1/restaurant/deletefood/${itemKey}`, {
+      await axios.delete(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/deletefood/${itemKey}`, {
         withCredentials: true,
       });
 
@@ -92,7 +92,7 @@ const FoodManagementSection = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.APP_BE_URL}/api/v1/restaurant/addfood/${userId}`, formData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/addfood/${userId}`, formData, {
         headers: {
           'Authorization': `Bearer ${userId}`,
           'Content-Type': 'multipart/form-data',
