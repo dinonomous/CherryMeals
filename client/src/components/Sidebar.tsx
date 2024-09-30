@@ -1,5 +1,3 @@
-// components/Sidebar.tsx
-// components/Sidebar.tsx
 import React from 'react';
 
 const Sidebar: React.FC<{ isSidebarOpen: boolean; setCurrentSection: (section: string) => void }> = ({ isSidebarOpen, setCurrentSection }) => {

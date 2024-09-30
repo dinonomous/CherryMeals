@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // Updated import for Next.js 13
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -16,12 +16,12 @@ const RegistrationForm: React.FC = () => {
   const [state, setState] = useState("");
   const [zip, setZip] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true before fetching
+    setLoading(true);
 
     const userData = {
         name,
@@ -50,13 +50,12 @@ const RegistrationForm: React.FC = () => {
       const data = await response.json();
       console.log("Registration successful!", data);
 
-      // Redirect to the login page after successful registration
       router.push("/login");
     } catch (err: unknown) {
       console.error("Registration error:", err);
       setError((err as Error).message || "An error occurred during registration.");
     } finally {
-      setLoading(false); // Reset loading state after the fetch is complete
+      setLoading(false);
     }
   };
 
@@ -220,7 +219,7 @@ const RegistrationForm: React.FC = () => {
               <button
                 type="submit"
                 className="w-full bg-blue-600 text-white font-semibold mt-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
-                disabled={loading} // Disable button during loading
+                disabled={loading}
               >
                 {loading ? "Registering..." : "Register"}
               </button>

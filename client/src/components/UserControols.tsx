@@ -6,27 +6,27 @@ import Link from "next/link";
 const UserControls = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Function to check if the user is authenticated
   const checkAuth = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/checkAuth`, {
         method: 'GET',
         credentials: 'include',
       });
-
       const data = await response.json();
       if (data.success) {
+        sessionStorage.setItem('userId', data.userId);
         setIsLoggedIn(true);
       } else {
         setIsLoggedIn(false);
+        sessionStorage.removeItem('userId');
       }
     } catch (error) {
       console.error("Error checking authentication:", error);
       setIsLoggedIn(false);
+      sessionStorage.removeItem('userId');
     }
   };
 
-  // Call checkAuth on component mount
   useEffect(() => {
     checkAuth();
   }, []);
@@ -36,12 +36,12 @@ const UserControls = () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/logout`, {
         method: 'POST',
-        credentials: 'include', // Include cookies in the request
+        credentials: 'include',
       });
 
       const data = await response.json();
       if (data.success) {
-        setIsLoggedIn(false); // Update the login state
+        setIsLoggedIn(false); 
       }
     } catch (error) {
       console.error("Error during logout:", error);

@@ -26,7 +26,6 @@ const FoodManagementSection: React.FC = () => {
   });
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch restaurant ID and check authentication
   useEffect(() => {
     const fetchRestaurantId = async () => {
       try {
@@ -72,7 +71,7 @@ const FoodManagementSection: React.FC = () => {
     };
 
     fetchFoodItems();
-  }, [userId]); // Fetch when userId changes
+  }, [userId]); 
 
   // Handle food item removal
   const handleRemove = async (itemKey: string) => {

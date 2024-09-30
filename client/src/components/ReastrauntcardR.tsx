@@ -9,7 +9,7 @@ interface RestaurantCardProps {
   rating: number;
   imageUrl: string;
   itemKey: string;
-  onRemove: (itemKey: string) => void; // Function to handle removal
+  onRemove: (itemKey: string) => void;
 }
 
 const RestaurantCard: React.FC<RestaurantCardProps> = ({

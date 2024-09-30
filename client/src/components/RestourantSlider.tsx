@@ -4,15 +4,14 @@ import Image from "next/image";
 import axios from "axios";
 import Link from "next/link";
 
-// Define a type for Restaurant
 type Restaurant = {
   _id: string;
   name: string;
   rating: number;
-  deliveryTime?: string; // optional
+  deliveryTime?: string; 
   shortDescription: string;
-  location?: string; // optional
-  discount?: string; // optional
+  location?: string; 
+  discount?: string; 
 };
 
 const CardSlider: React.FC = () => {
@@ -24,8 +23,8 @@ const CardSlider: React.FC = () => {
   const scrollLeft = () => {
     if (containerRef.current) {
       containerRef.current.scrollBy({
-        left: -300, // Adjust the scroll distance
-        behavior: "smooth", // Smooth scroll effect
+        left: -300,
+        behavior: "smooth",
       });
     }
   };
@@ -34,8 +33,8 @@ const CardSlider: React.FC = () => {
   const scrollRight = () => {
     if (containerRef.current) {
       containerRef.current.scrollBy({
-        left: 300, // Adjust the scroll distance
-        behavior: "smooth", // Smooth scroll effect
+        left: 300, 
+        behavior: "smooth", 
       });
     }
   };
