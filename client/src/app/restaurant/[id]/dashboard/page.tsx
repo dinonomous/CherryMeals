@@ -1,17 +1,16 @@
 'use client';
-// pages/index.tsx or wherever your main component is
+
 import React, { useState } from 'react';
 import Sidebar from '../../../../components/Sidebar';
 import Header from '../../../../components/Header';
-import Card from '../../../../components/Card';
+import Card from '../../../../components/Card'; // Ensure Card is correctly imported
 import Table from '../../../../components/Table';
 import ReservationChart from '../../../../components/ReservationChart';
 import FoodManagementSection from '@/components/FoodManagementSection';
 
-
 const MainPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState('dashboard'); // State to manage the current section
+  const [currentSection, setCurrentSection] = useState('dashboard');
 
   const bookings = [
     { name: 'Frank Baker', roomType: 'Single', checkIn: '12/03/2024', checkOut: '13/03/2024', paidAmount: '$0.00', dueAmount: '$230', paymentStatus: 'Pending' },
@@ -26,10 +25,10 @@ const MainPage = () => {
         return (
           <>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-              <Card title="Today's Check In" value="40" change="10" />
-              <Card title="Today's Check Out" value="20" change="5" />
-              <Card title="Total Reservations" value="300" change="20" />
-              <Card title="Total Guests" value="200" change="30" />
+              <Card title="Today's Check In" value={40} change={10} />  {/* Updated value and change to number */}
+              <Card title="Today's Check Out" value={20} change={5} />
+              <Card title="Total Reservations" value={300} change={20} />
+              <Card title="Total Guests" value={200} change={30} />
             </div>
             <ReservationChart />
             <Table bookings={bookings} />
@@ -51,7 +50,7 @@ const MainPage = () => {
     <div className="flex">
       <Sidebar isSidebarOpen={isSidebarOpen} setCurrentSection={setCurrentSection} />
       <div className="flex-1 p-4 box-border">
-        <Header setIsSidebarOpen={setIsSidebarOpen} />
+      <Header onToggleSidebar={setIsSidebarOpen} />
         {renderSection()}
       </div>
     </div>

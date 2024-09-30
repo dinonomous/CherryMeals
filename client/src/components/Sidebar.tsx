@@ -2,7 +2,7 @@
 // components/Sidebar.tsx
 import React from 'react';
 
-const Sidebar = ({ isSidebarOpen, setCurrentSection }) => {
+const Sidebar: React.FC<{ isSidebarOpen: boolean; setCurrentSection: (section: string) => void }> = ({ isSidebarOpen, setCurrentSection }) => {
   return (
     <aside
       className={`fixed top-0 inset-y-0 left-0 transform ${

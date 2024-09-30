@@ -58,9 +58,8 @@ const LoginForm: React.FC = () => {
       const data = await response.json();
       console.log("Login successful!", data);
       router.push("/");
-    } catch (err) {
-      console.error("Login error:", err);
-      setError(err.message || "An error occurred during login.");
+    } catch (error: unknown) {
+      setError((error as Error).message); // Cast error to Error object
     }
   };
 

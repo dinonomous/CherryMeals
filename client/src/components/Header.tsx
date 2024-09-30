@@ -1,13 +1,16 @@
-// components/Header.tsx
 import React from 'react';
 
-const Header = ({ setIsSidebarOpen }) => {
+interface HeaderProps {
+  onToggleSidebar: (value: boolean) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
   return (
     <header className="flex justify-between items-center mb-6">
       <div className="flex items-center">
         <button
           className="md:hidden text-gray-600 mr-4"
-          onClick={() => setIsSidebarOpen(prev => !prev)}
+          onClick={() => onToggleSidebar(true)}
         >
           <i className="fas fa-bars"></i>
         </button>

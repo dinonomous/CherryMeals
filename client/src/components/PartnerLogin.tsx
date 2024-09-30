@@ -59,9 +59,9 @@ const LoginForm: React.FC = () => {
 
       // After successful login, redirect to the home page
       router.push("/");
-    } catch (err) {
+    } catch (err: Error | unknown) {
       console.error("Login error:", err);
-      setError(err.message || "An error occurred during login.");
+      setError((err as Error).message || "An error occurred during login.");
     }
   };
 

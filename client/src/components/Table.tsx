@@ -1,7 +1,20 @@
-// components/Table.tsx
 import React from 'react';
 
-const Table = ({ bookings }) => {
+interface Booking {
+  name: string;
+  roomType: string;
+  checkIn: string;
+  checkOut: string;
+  paidAmount: string;
+  dueAmount: string;
+  paymentStatus: string;
+}
+
+interface TableProps {
+  bookings: Booking[];
+}
+
+const Table: React.FC<TableProps> = ({ bookings }) => {
   return (
     <table className="w-full text-left border-collapse">
       <thead>

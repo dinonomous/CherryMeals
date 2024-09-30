@@ -52,9 +52,9 @@ const RegistrationForm: React.FC = () => {
 
       // Redirect to the login page after successful registration
       router.push("/login");
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Registration error:", err);
-      setError(err.message || "An error occurred during registration.");
+      setError((err as Error).message || "An error occurred during registration.");
     } finally {
       setLoading(false); // Reset loading state after the fetch is complete
     }
