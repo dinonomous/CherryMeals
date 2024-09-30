@@ -30,12 +30,12 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ params }) => {
         );
         setOrders(response.data.orders);
       } catch (error) {
-        setError("Failed to load orders."); // Set error message
+        setError((error as Error).message); // Cast error to Error object
       } finally {
         setLoading(false);
       }
     };
-
+  
     if (userId) {
       fetchOrders();
     }
