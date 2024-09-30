@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-require("dotenv").config();
+
 
 const UserControls = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

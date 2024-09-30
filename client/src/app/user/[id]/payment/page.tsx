@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
-require("dotenv").config();
+
 
 interface OrderItem {
   foodId: string;

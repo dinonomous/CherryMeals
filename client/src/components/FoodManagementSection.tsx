@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import RestaurantCard from "./ReastrauntcardR";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
-require("dotenv").config();
 
 const FoodManagementSection = () => {
   const router = useRouter();

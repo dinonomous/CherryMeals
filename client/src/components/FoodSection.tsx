@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation"; // For redirection
+import { useRouter } from "next/navigation";
 import Card from "./foodCard";
-require("dotenv").config();
 
 interface Food {
   _id: string;
@@ -34,9 +33,9 @@ const getCookie = (cookieName: string) => {
 };
 
 const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
-  const [topFood, setTopFood] = useState<Food[]>([]); // Use the correct type for food items
+  const [topFood, setTopFood] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
-  const [uid, setUid] = useState<string | null>(null); // Initialize uid as null by default
+  const [uid, setUid] = useState<string | null>(null); 
   const router = useRouter();
 
   // Check for user ID from cookies on component mount
@@ -106,10 +105,9 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
     );
   }
 
-  // Function to handle clicks on the "Add to Cart" button
   const handleAddToCart = (foodId: string) => {
     if (!uid) {
-      router.push("/login"); // Redirect to login page if user is not logged in
+      router.push("/login");
     }
   };
   console.log(topFood);
@@ -120,16 +118,16 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
       <div className="foodsection flex flex-wrap gap-8 md:gap-4 items-center justify-center my-8">
         {topFood.map((food) => (
           <Card
-            key={food.id || food._id} // Use food._id if available, otherwise use food.foodId
+            key={food.id || food._id} 
             title={food.name}
-            imageUrl={food.imageUrl} // Use food.imageUrl if id exists
-            restaurantName="The Spice House" // Consider making this dynamic as well
+            imageUrl={food.imageUrl} 
+            restaurantName="The Spice House" 
             description={food.description}
             price={`Rs ${food.price.toFixed(2) || "0.00"}`}
             deliveryTime="15-20 mins"
             rating={food.rating || 0}
-            itemKey={food.id || food._id} // Use food._id if available, otherwise use food.foodId
-            userId={uid} // Pass uid to Card component
+            itemKey={food.id || food._id} 
+            userId={uid} 
             onAddToCart={handleAddToCart}
           />
         ))}

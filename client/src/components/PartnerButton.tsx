@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
-require("dotenv").config();
+
 
 const PartnerButton = () => {
   const [restaurantId, setRestaurantId] = useState<string | null>(null);

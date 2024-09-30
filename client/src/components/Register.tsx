@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation"; // Updated import for Next.js 13
 import Image from "next/image";
 import Link from "next/link";
-require("dotenv").config();
+
 
 const RegistrationForm: React.FC = () => {
   const [name, setName] = useState("");

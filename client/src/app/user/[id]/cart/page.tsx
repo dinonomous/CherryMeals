@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import CartItem from "@/components/CartItem";
 import axios from "axios";
-require("dotenv").config();
+
 
 interface CartItemType {
   foodId: string;

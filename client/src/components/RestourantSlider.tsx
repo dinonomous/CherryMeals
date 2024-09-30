@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import Link from "next/link";
-require("dotenv").config();
+
 
 const CardSlider: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);

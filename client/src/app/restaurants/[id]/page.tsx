@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import RestaurantCard from "../../../components/Reastrauntcard"; // Ensure the path is correct
 import FoodSection from "@/components/FoodSection";
-require("dotenv").config();
+
 
 const Restaurant: React.FC<{ params: { id: string } }> = ({ params }) => {
   const { id } = params; // Get the id from params

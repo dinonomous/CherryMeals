@@ -1,7 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-import axios from 'axios';
-require("dotenv").config();
 
 interface CardProps {
   title: string;

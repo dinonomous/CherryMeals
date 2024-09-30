@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-require("dotenv").config();
+
 
 type Order = {
   _id: string;
