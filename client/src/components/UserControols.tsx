@@ -11,7 +11,7 @@ const UserControls = () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/checkAuth`, {
         method: 'GET',
-        credentials: 'include', // Include cookies in the request
+        credentials: 'include',
       });
 
       const data = await response.json();

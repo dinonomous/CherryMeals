@@ -221,7 +221,7 @@ router.post("/check-email", async (req, res) => {
 
 router.get("/checkAuth", (req, res) => {
   const token = req.cookies.token;
-
+  console.log(token);
   if (!token) {
     return res.status(401).send({
       success: false,
@@ -229,7 +229,6 @@ router.get("/checkAuth", (req, res) => {
     });
   }
 
-  // Verify the JWT token
   jwt.verify(token, secretOrKey, (err, decoded) => {
     if (err) {
       return res.status(401).send({
@@ -238,17 +237,25 @@ router.get("/checkAuth", (req, res) => {
       });
     }
 
-    // Assuming the user ID is stored in the token's payload (e.g., `decoded.userId`)
-    const userId = decoded.id || decoded.userId; // Adjust according to how the token was created
+    const userId = decoded.id || decoded.userId; 
 
+    if (!userId) {
+      return res.status(400).send({
+        success: false,
+        message: "User ID not found in token",
+      });
+    }
+
+    // Return userId in the response
     return res.status(200).send({
       success: true,
       message: "User is authenticated",
-      userId,
-      user: decoded,
+      userId, 
+      user: decoded, 
     });
   });
 });
+
 
 router.post("/logout", (req, res) => {
   try {
