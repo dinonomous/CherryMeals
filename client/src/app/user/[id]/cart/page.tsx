@@ -191,7 +191,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
         localStorage.setItem("orderData", JSON.stringify(orders));
 
         // Redirect to the payment page
-        const redirectToPaymentPage = `http://localhost:3000/user/${userId}/payment`;
+        const redirectToPaymentPage = `${process.env.NEXT_PUBLIC_APP_BE_URL}/user/${userId}/payment`;
         window.location.href = redirectToPaymentPage;
       } else {
         setError("Failed to create order. Please try again.");
