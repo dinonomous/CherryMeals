@@ -179,7 +179,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
       };
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/users/${userId}/orders`,
+        `${process.env.NEXT_PUBLIC_APP_FE_URL}/api/v1/users/${userId}/orders`,
         orderData
       );
 
