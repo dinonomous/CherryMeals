@@ -56,6 +56,7 @@ const LoginForm: React.FC = () => {
       }
 
       const data = await response.json();
+      sessionStorage.setItem('userId', data.uid);
       console.log("Login successful!", data);
       router.push("/");
     } catch (error: unknown) {

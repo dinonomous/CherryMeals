@@ -83,18 +83,13 @@ router.post("/login", async (req, res) => {
 
     res.cookie("token", token, cookieOptions);
 
-    res.cookie("userid", user._id.toString(), {
-      httpOnly: false,
-      maxAge: 86400000,
-      sameSite: "None",
-      secure: true,
-    });
-
     return res.status(200).json({
       success: true,
       message: "Logged in successfully",
       email: user.email,
+      uid: user._id.toString(),
     });
+    
   } catch (error) {
     console.error("Error during login:", error);
     return res.status(500).json({
