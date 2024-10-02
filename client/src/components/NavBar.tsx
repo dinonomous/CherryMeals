@@ -21,9 +21,9 @@ export default function NavBar() {
   }
 
   return (
-    <nav className="max-w-[85rem] w-full mx-auto px-4 flex flex-wrap basis-full items-center justify-between">
+    <nav className="max-w-[85rem] mx-1 px-4 py-4 flex flex-wrap basis-full items-center justify-between rounded-3xl shadow-lg fixed top-4 z-50 bg-whiteCustom dark:bg-zinc-700 sm:rounded-full left-0 right-0 sm:left-1 sm:right-1 w-auto sm:w-auto sm:mx-auto">
             <a
-              className="sm:order-1 flex-none text-xl font-semibold dark:text-gray-50 text-red-900 focus:outline-none focus:opacity-80"
+              className="sm:order-1 flex-none text-xl font-semibold dark:text-gray-50 text-red-900 focus:outline-none focus:opacity-80 ms-4"
               href="#"
             >
               Cherry Meals

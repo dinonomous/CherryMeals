@@ -5,6 +5,12 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const { secretOrKey } = require("../config/keys");
 const Joi = require("joi");
+const s3 = require("../aws/s3Client");
+const multer = require("multer");
+const AWS = require("aws-sdk");
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const loginSchema = Joi.object({
   email: Joi.string().email().required().messages({
@@ -20,12 +26,12 @@ const loginSchema = Joi.object({
 });
 
 router.options("/login", (req, res) => {
-    res.header("Access-Control-Allow-Origin", req.headers.origin);
-    res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.sendStatus(200);
-  });
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.sendStatus(200);
+});
 
 router.post("/login", async (req, res) => {
   try {
@@ -92,60 +98,42 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/register", async (req, res) => {
+router.post("/register", upload.single("image"), async (req, res) => {
   try {
-    res.header("Access-Control-Allow-Origin", req.headers.origin);
-    res.header("Access-Control-Allow-Credentials", "true");
-
     const { name, email, password, phoneNumber, address } = req.body;
 
     const errors = [];
     if (!name || typeof name !== "string" || name.length < 3) {
       errors.push("Name must be at least 3 characters long.");
     }
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       errors.push("Please provide a valid email address.");
     }
-
     if (!password || typeof password !== "string" || password.length < 6) {
       errors.push("Password must be at least 6 characters long.");
     }
-
-    if (
-      !phoneNumber ||
-      typeof phoneNumber !== "string" ||
-      phoneNumber.length < 10
-    ) {
+    if (!phoneNumber || typeof phoneNumber !== "string" || phoneNumber.length < 10) {
       errors.push("Phone number must be at least 10 digits long.");
     }
-
     if (!address || typeof address !== "string" || address.length < 5) {
       errors.push("Address must be at least 5 characters long.");
     }
-
     if (errors.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: errors.join(" "),
-      });
+      return res.status(400).json({ success: false, message: errors.join(" ") });
     }
 
-    // Check if restaurant already exists
+    // Check if the restaurant already exists
     const existingRestaurant = await RestaurantModel.findOne({ email });
     if (existingRestaurant) {
-      return res.status(400).json({
-        success: false,
-        message: "Email already registered",
-      });
+      return res.status(400).json({ success: false, message: "Email already registered" });
     }
 
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new restaurant
+    // Create new restaurant (without the image yet)
     const newRestaurant = new RestaurantModel({
       name,
       email,
@@ -153,8 +141,24 @@ router.post("/register", async (req, res) => {
       phoneNumber,
       address,
     });
-
     const savedRestaurant = await newRestaurant.save();
+
+    // Upload the image to S3
+    if (req.file) {
+      const image = req.file;
+      const params = {
+        Bucket: 'dineshwar', // Your S3 bucket name
+        Key: `CherryMeals/restaurant/${savedRestaurant._id}.png`, // Using the restaurant ID as the file name
+        Body: image.buffer, // The image buffer
+        ContentType: image.mimetype, // The content type (e.g., 'image/png')
+      };
+
+      const s3Response = await s3.upload(params).promise();
+      const imageUrl = s3Response.Location;
+
+      savedRestaurant.imageUrl = imageUrl;
+      await savedRestaurant.save();
+    }
 
     return res.status(201).json({
       success: true,
@@ -163,15 +167,13 @@ router.post("/register", async (req, res) => {
         id: savedRestaurant._id,
         name: savedRestaurant.name,
         email: savedRestaurant.email,
-        address: savedRestaurant.address, // Include address in response
+        address: savedRestaurant.address,
+        imageUrl: savedRestaurant.imageUrl, // Image URL added
       },
     });
   } catch (error) {
-    console.error("Error creating restaurant:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Server error during registration",
-    });
+    console.error("Error registering restaurant:", error);
+    return res.status(500).json({ success: false, message: "Server error during registration" });
   }
 });
 
@@ -186,6 +188,7 @@ router.post("/logout", (req, res) => {
       success: true,
       message: "Logged out successfully",
     });
+    
   } catch (error) {
     console.error("Logout error:", error);
     res.status(500).send({
@@ -196,36 +199,34 @@ router.post("/logout", (req, res) => {
 });
 
 router.get("/checkAuth", (req, res) => {
-    const token = req.cookies.restaurantId; // Get the token from cookies
-  
-    if (!token) {
+  const token = req.cookies.restaurantId; // Get the token from cookies
+
+  if (!token) {
+    return res.status(401).send({
+      success: false,
+      message: "User not authenticated",
+    });
+  }
+
+  // Verify the JWT token
+  jwt.verify(token, secretOrKey, (err, decoded) => {
+    if (err) {
       return res.status(401).send({
         success: false,
-        message: "User not authenticated",
+        message: "Token is invalid",
       });
     }
-  
-    // Verify the JWT token
-    jwt.verify(token, secretOrKey, (err, decoded) => {
-      if (err) {
-        return res.status(401).send({
-          success: false,
-          message: "Token is invalid",
-        });
-      }
-  
-      // Assuming the user ID is stored in the token's payload (e.g., `decoded.userId`)
-      const userId = decoded.id || decoded.userId; // Adjust according to how the token was created
-  
-      return res.status(200).send({
-        success: true,
-        message: "User is authenticated",
-        userId,
-        user: decoded,
-      });
+
+    // Assuming the user ID is stored in the token's payload (e.g., `decoded.userId`)
+    const userId = decoded.id || decoded.userId; // Adjust according to how the token was created
+
+    return res.status(200).send({
+      success: true,
+      message: "User is authenticated",
+      userId,
+      user: decoded,
     });
   });
-
-  
+});
 
 module.exports = router;

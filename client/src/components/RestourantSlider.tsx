@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type Restaurant = {
@@ -94,12 +93,12 @@ const CardSlider: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-2 h-fit">
+    <div className="max-w-7xl mx-auto p-2 h-fit ">
       <div className="relative">
         <div className="flex items-center">
-          <h2 className="text-black font-semibold mr-auto">
-            Top Restaurants Near SRM
-          </h2>
+          <h1 className="text-black font-semibold mr-auto text-3xl mx-2 dark:text-whiteCustom">
+            Top restaurants near SRM
+          </h1>
           <button
             className="bg-gray-100 rounded-full text-black p-2 ml-2"
             onClick={scrollLeft}
@@ -124,13 +123,13 @@ const CardSlider: React.FC = () => {
           </button>
         </div>
         <div
-          className="flex gap-4 mt-4 overflow-x-auto no-scrollbar scroll-snap-x h-fit"
+          className="flex gap-4 mt-4 overflow-x-auto no-scrollbar scroll-snap-x h-fit dark:bg-zinc-900 rounded-2xl p-2"
           ref={containerRef}
         >
           {restaurants.map((restaurant) => (
             <div
               key={restaurant._id}
-              className="transform transition-transform min-w-[350px] rounded-lg h-fit hover:bg-gray-200 p-2"
+              className="transform transition-transform min-w-[350px] rounded-lg h-fit hover:bg-gray-200 p-2 dark:hover:bg-slate-800 dark:border-gray-700 border-[1px] dark:bg-neutral-900"
               onClick={() => handleClick(restaurant._id)}
             >
               <div className="relative">

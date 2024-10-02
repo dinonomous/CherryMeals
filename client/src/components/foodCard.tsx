@@ -64,7 +64,7 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div
-      className="max-w-[350px] flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70"
+      className="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70 p-2 m-2 flex-auto"
       key={itemKey}
     >
       <Image
@@ -72,9 +72,9 @@ const Card: React.FC<CardProps> = ({
         alt="Card Image"
         width={350}
         height={100}
-        className="w-full h-40 rounded-t-xl object-cover sm:h-96"
+        className="w-full max-h-72 rounded-t-xl sm:h-96 object-cover"
       />
-      <div className="p-4 md:p-5">
+      <div className="p-4 md:p-2 ">
         <h3 className="text-lg font-bold text-gray-800 dark:text-white">{title}</h3>
         <div className="flex items-center">
           <Image src="/assets/star.svg" alt="Star" width={16} height={16} />
@@ -95,7 +95,7 @@ const Card: React.FC<CardProps> = ({
         </div>
         <div className="flex space-x-2 mt-2">
           <a
-            className="py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary text-white hover:bg-tertiary hover:text-black focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+            className="py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-full border border-transparent bg-primary text-white hover:bg-tertiary hover:text-black focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
             href="#"
             onClick={handleAddToCartClick}
             style={{ pointerEvents: userId ? "auto" : "none", opacity: userId ? 1 : 0.5 }}

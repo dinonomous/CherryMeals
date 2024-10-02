@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import PrelineScript from "../components/PrelineScript";
 import NavBar from "@/components/NavBar";
+import { Open_Sans as OpenSans } from "@next/font/google";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+const openSans = OpenSans({
+  subsets: ["latin"],
   variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -28,13 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark:bg-blackCustom bg-whiteCustom`}
+        className={`${openSans.className} antialiased dark:bg-blackCustom bg-whiteCustom`}
 
       >
-        <header className="flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3 dark:bg-neutral-800">
+        <header className="flex flex-wrap w-full text-sm py-3 justify-center items-center">
           <NavBar />
         </header>
-        <main className="dark:bg-blackCustom bg-whiteCustom mt-4 text-gray-900 dark:text-whiteCustom min-h-full box-border px-4">
+        <main className="dark:bg-blackCustom bg-whiteCustom text-gray-900 dark:text-whiteCustom min-h-full box-border px-1 sm:p-4 mt-16">
           {children}
         </main>
         <footer className="dark:bg-blackCustom bg-whiteCustom">
@@ -44,11 +39,6 @@ export default function RootLayout({
                 <div className="flex justify-center text-teal-300 sm:justify-start">
                   {/* <img src={logo} alt="" srcset="" classNameName="h-8 w-8" /> */}
                 </div>
-
-                <p className="max-w-md mx-auto mt-6 leading-relaxed text-center text-gray-400 sm:max-w-xs sm:mx-0 sm:text-left">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Incidunt consequuntur amet culpa cum itaque neque.
-                </p>
 
                 <ul className="flex justify-center gap-6 mt-8 sm:gap-8 sm:justify-start">
                   <li>

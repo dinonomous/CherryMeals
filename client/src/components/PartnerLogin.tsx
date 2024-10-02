@@ -23,7 +23,6 @@ const LoginForm: React.FC = () => {
         );
 
         if (response.ok) {
-          // User is authenticated, redirect to the homepage
           router.push("/");
         }
       } catch (err) {
@@ -46,7 +45,7 @@ const LoginForm: React.FC = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ email, password }),
-          credentials: "include", // Important for sending cookies
+          credentials: "include",
         }
       );
 
@@ -56,9 +55,9 @@ const LoginForm: React.FC = () => {
 
       const data = await response.json();
       console.log("Login successful!", data);
-
-      // After successful login, redirect to the home page
+      sessionStorage.setItem("restaurantId", data.restaurantId)
       router.push("/");
+      window.location.reload();
     } catch (err: Error | unknown) {
       console.error("Login error:", err);
       setError((err as Error).message || "An error occurred during login.");

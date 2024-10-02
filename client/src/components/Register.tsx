@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-
 const RegistrationForm: React.FC = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,27 +23,31 @@ const RegistrationForm: React.FC = () => {
     setLoading(true);
 
     const userData = {
-        name,
-        email,
-        password,
-        phonenumber: phone,
-        address: `${street}, ${city}, ${state}`,
-      };
-      
-      
+      name,
+      email,
+      password,
+      phonenumber: phone,
+      address: `${street}, ${city}, ${state}`,
+    };
+
     try {
-        console.log(userData);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+      console.log(userData);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed. Please check your details.");
+        throw new Error(
+          errorData.message || "Registration failed. Please check your details."
+        );
       }
 
       const data = await response.json();
@@ -53,7 +56,9 @@ const RegistrationForm: React.FC = () => {
       router.push("/login");
     } catch (err: unknown) {
       console.error("Registration error:", err);
-      setError((err as Error).message || "An error occurred during registration.");
+      setError(
+        (err as Error).message || "An error occurred during registration."
+      );
     } finally {
       setLoading(false);
     }
@@ -61,9 +66,11 @@ const RegistrationForm: React.FC = () => {
 
   return (
     <>
-      <span className="flex min-h-[80vh] w-full">
+      <span className="flex min-h-[80vh] w-full max-w-7xl mx-auto h-fit">
         <div className="w-full px-7 flex flex-col justify-center box-border">
-          <h2 className="font-bold text-blackCustom dark:text-whiteCustom text-center text-4xl">Register</h2>
+          <h2 className="font-bold text-blackCustom dark:text-whiteCustom text-center text-4xl">
+            Register
+          </h2>
           <p className="mt-4 text-blackCustom dark:text-whiteCustom text-center text-xl mb-8">
             Create an account to get started
           </p>
@@ -75,9 +82,18 @@ const RegistrationForm: React.FC = () => {
           )}
 
           {error && (
-            <div className="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-              <svg className="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+            <div
+              className="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+              role="alert"
+            >
+              <svg
+                className="flex-shrink-0 w-4 h-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
               </svg>
               <div className="ms-3 text-sm font-medium">{error}</div>
               <button
@@ -87,158 +103,198 @@ const RegistrationForm: React.FC = () => {
                 aria-label="Close"
               >
                 <span className="sr-only">Close</span>
-                <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                <svg
+                  className="w-3 h-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
                 </svg>
               </button>
             </div>
           )}
 
-          {!loading && (<span className="flex w-full">
-            <form className="mt-6 w-1/2 p-4" onSubmit={handleSubmit}>
-              <div>
-                <label className="block text-blackCustom dark:text-whiteCustom" htmlFor="name">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter your name"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                  required
+          {!loading && (
+            <span className="flex w-full ">
+              <form className="mt-6 w-full p-4 md:block md:w-1/2" onSubmit={handleSubmit}>
+                <div>
+                  <label
+                    className="block text-blackCustom dark:text-whiteCustom"
+                    htmlFor="name"
+                  >
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter your name"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="mt-4">
+                  <label
+                    className="block text-blackCustom dark:text-whiteCustom"
+                    htmlFor="email"
+                  >
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter Email Address"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="mt-4">
+                  <label
+                    className="block text-blackCustom dark:text-whiteCustom"
+                    htmlFor="password"
+                  >
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter Password"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="mt-4">
+                  <label
+                    className="block text-blackCustom dark:text-whiteCustom"
+                    htmlFor="phone"
+                  >
+                    Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    id="phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Enter Phone Number"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="mt-4">
+                  <label
+                    className="block text-blackCustom dark:text-whiteCustom"
+                    htmlFor="street"
+                  >
+                    Street
+                  </label>
+                  <input
+                    type="text"
+                    id="street"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
+                    placeholder="Enter Street Address"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="mt-4">
+                  <label
+                    className="block text-blackCustom dark:text-whiteCustom"
+                    htmlFor="city"
+                  >
+                    City
+                  </label>
+                  <input
+                    type="text"
+                    id="city"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="Enter City"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="mt-4">
+                  <label
+                    className="block text-blackCustom dark:text-whiteCustom"
+                    htmlFor="state"
+                  >
+                    State
+                  </label>
+                  <input
+                    type="text"
+                    id="state"
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    placeholder="Enter State"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="mt-4">
+                  <label
+                    className="block text-blackCustom dark:text-whiteCustom"
+                    htmlFor="zip"
+                  >
+                    ZIP Code
+                  </label>
+                  <input
+                    type="text"
+                    id="zip"
+                    value={zip}
+                    onChange={(e) => setZip(e.target.value)}
+                    placeholder="Enter ZIP Code"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white font-semibold mt-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
+                  disabled={loading}
+                >
+                  {loading ? "Registering..." : "Register"}
+                </button>
+              </form>
+              <div className="relative w-full md:w-1/2  min-h-full md:block hidden">
+                <Image
+                  src="/assets/login.jpg"
+                  alt="Scroll Left"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-xl"
                 />
               </div>
-
-              <div className="mt-4">
-                <label className="block text-blackCustom dark:text-whiteCustom" htmlFor="email">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter Email Address"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div className="mt-4">
-                <label className="block text-blackCustom dark:text-whiteCustom" htmlFor="password">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter Password"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div className="mt-4">
-                <label className="block text-blackCustom dark:text-whiteCustom" htmlFor="phone">
-                  Phone Number
-                </label>
-                <input
-                  type="text"
-                  id="phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Enter Phone Number"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div className="mt-4">
-                <label className="block text-blackCustom dark:text-whiteCustom" htmlFor="street">
-                  Street
-                </label>
-                <input
-                  type="text"
-                  id="street"
-                  value={street}
-                  onChange={(e) => setStreet(e.target.value)}
-                  placeholder="Enter Street Address"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div className="mt-4">
-                <label className="block text-blackCustom dark:text-whiteCustom" htmlFor="city">
-                  City
-                </label>
-                <input
-                  type="text"
-                  id="city"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  placeholder="Enter City"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div className="mt-4">
-                <label className="block text-blackCustom dark:text-whiteCustom" htmlFor="state">
-                  State
-                </label>
-                <input
-                  type="text"
-                  id="state"
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  placeholder="Enter State"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div className="mt-4">
-                <label className="block text-blackCustom dark:text-whiteCustom" htmlFor="zip">
-                  ZIP Code
-                </label>
-                <input
-                  type="text"
-                  id="zip"
-                  value={zip}
-                  onChange={(e) => setZip(e.target.value)}
-                  placeholder="Enter ZIP Code"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white font-semibold mt-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
-                disabled={loading}
-              >
-                {loading ? "Registering..." : "Register"}
-              </button>
-            </form>
-            <div className="relative w-1/2 hidden md:block min-h-full">
-            <Image
-              src="/assets/login.jpg"
-              alt="Scroll Left"
-              layout="fill"
-              objectFit="cover"
-              className="rounded-xl"
-            />
-          </div>
-          </span>
+            </span>
           )}
 
           <p className="mt-4 text-center text-blackCustom dark:text-whiteCustom">
             Already have an account?{" "}
-            <Link href="/login" className="text-blue-600 hover:underline dark:text-blue-500">
+            <Link
+              href="/login"
+              className="text-blue-600 hover:underline dark:text-blue-500"
+            >
               Login
             </Link>
           </p>

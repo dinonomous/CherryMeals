@@ -21,44 +21,49 @@ const FoodManagementSection: React.FC = () => {
     name: "",
     price: "",
     description: "",
-    image: null as File | null, // Ensure correct type for the image
+    image: null as File | null,
     rating: 0, 
   });
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchRestaurantId = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/checkAuth`,
-          {
-            method: "GET",
-            credentials: "include",
+    if(!sessionStorage.getItem("restaurantId")){
+      const fetchRestaurantId = async () => {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/checkAuth`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+          if (!response.ok) {
+            throw new Error("Failed to fetch restaurant ID");
           }
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch restaurant ID");
+          const data = await response.json();
+          if (data.success) {
+            setUserId(data.userId);
+          }
+        } catch (error) {
+          console.error("Error fetching restaurant ID:", error);
+          setError("Failed to authenticate. Please try again.");
         }
-        const data = await response.json();
-        if (data.success) {
-          setUserId(data.userId);
-        }
-      } catch (error) {
-        console.error("Error fetching restaurant ID:", error);
-        setError("Failed to authenticate. Please try again.");
-      }
-    };
-
-    fetchRestaurantId();
+      };
+  
+      fetchRestaurantId();
+    }
+    else{
+      setUserId(sessionStorage.getItem("restaurantId"));
+    }
+    
   }, []);
 
-  // Fetch food items once userId is available
   useEffect(() => {
     const fetchFoodItems = async () => {
       if (userId) {
         try {
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/nofooditems/${userId}/menu`
+            `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/restaurant/nofooditems/${userId}/menue`
           );
           setFoodItems(response.data);
         } catch (error) {
@@ -81,6 +86,7 @@ const FoodManagementSection: React.FC = () => {
         { withCredentials: true }
       );
       setFoodItems((prevItems) => prevItems.filter((item) => item.id !== itemKey));
+      window.location.reload();
     } catch (error) {
       console.error("Error removing food item:", error);
       setError("Failed to remove food item.");
@@ -97,7 +103,7 @@ const FoodManagementSection: React.FC = () => {
     formData.append("description", newFood.description);
     formData.append("rating", newFood.rating.toString());
     if (newFood.image) {
-      formData.append("image", newFood.image); // Append the image file
+      formData.append("image", newFood.image);
     }
 
     try {
@@ -115,6 +121,7 @@ const FoodManagementSection: React.FC = () => {
       setFoodItems((prevItems) => [...prevItems, response.data]);
       setNewFood({ name: "", price: "", description: "", image: null, rating: 0 }); // Clear form
       setShowAddFoodForm(false); 
+      window.location.reload();
     } catch (error) {
       console.error("Error adding food item:", error);
       setError("Failed to add food item.");

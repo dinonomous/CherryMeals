@@ -1,32 +1,38 @@
-'use client';
+"use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from 'next/navigation';
-
+import { useRouter } from "next/navigation";
 
 const PartnerButton = () => {
   const [restaurantId, setRestaurantId] = useState<string | null>(null);
   const router = useRouter(); // Use the router for manual navigation
 
   useEffect(() => {
-    const fetchRestaurantId = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/checkAuth`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch restaurant ID");
+    if (!sessionStorage.getItem("restaurantId")) {
+      const fetchRestaurantId = async () => {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_APP_BE_URL}/api/v1/auth/restaurant/checkAuth`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+          if (!response.ok) {
+            throw new Error("Failed to fetch restaurant ID");
+          }
+          const data = await response.json();
+          if (data.success) {
+            setRestaurantId(data.userId);
+          }
+        } catch (error) {
+          console.error("Error fetching restaurant ID:", error);
         }
-        const data = await response.json();
-        if (data.success) {
-          setRestaurantId(data.userId);
-        }
-      } catch (error) {
-        console.error("Error fetching restaurant ID:", error);
-      }
-    };
+      };
 
-    fetchRestaurantId();
+      fetchRestaurantId();
+    } else {
+      setRestaurantId(sessionStorage.getItem("restaurantId"));
+    }
   }, []);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {

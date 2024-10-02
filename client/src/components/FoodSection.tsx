@@ -96,12 +96,12 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-2 my-12">
-      <h2 className="text-xl">Favorite Foods</h2>
-      <div className="foodsection flex flex-wrap gap-8 md:gap-4 items-center justify-center my-8">
+    <div className="max-w-7xl mx-auto p-2 my-8">
+      <h1 className="text-3xl font-semibold mx-2">{id? "Restaurant Menue":"Favorite Foods"}</h1>
+      <div className="foodsection justify-between md:gap-4 items-center my-8 flex-1 grid grid-cols-1 gap-4 md:grid-cols-3 sm:grid-cols-2 dark:bg-zinc-900 rounded-2xl p-1">
         {topFood.map((food) => (
           <Card
-            key={food._id} // Ensure unique key
+            key={food._id}
             title={food.name}
             imageUrl={food.imageUrl || ""} // Ensure imageUrl is always provided
             restaurantName={food.restaurantName || "not provided"}
