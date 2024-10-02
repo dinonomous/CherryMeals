@@ -74,11 +74,13 @@ router.post("/login", async (req, res) => {
       expiresIn: "1d",
     });
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     const cookieOptions = {
-      httpOnly: false,
+      httpOnly: true,
       maxAge: 86400000,
-      sameSite: "None",
-      secure: true,
+      sameSite: isProduction ? "None" : "Lax",
+      secure: isProduction,
     };
 
     res.cookie("token", token, cookieOptions);
@@ -89,7 +91,7 @@ router.post("/login", async (req, res) => {
       email: user.email,
       uid: user._id.toString(),
     });
-    
+
   } catch (error) {
     console.error("Error during login:", error);
     return res.status(500).json({

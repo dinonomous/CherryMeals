@@ -9,9 +9,9 @@ type Restaurant = {
   name: string;
   rating: number;
   deliveryTime?: string; 
-  shortDescription: string;
-  location?: string; 
+  address?: string; 
   discount?: string; 
+  imageUrl: string;
 };
 
 const CardSlider: React.FC = () => {
@@ -128,7 +128,7 @@ const CardSlider: React.FC = () => {
             >
               <div className="relative">
                 <Image
-                  src="/assets/hotels.png"
+                  src={restaurant.imageUrl}
                   alt={restaurant.name}
                   width={350}
                   height={200}
@@ -153,8 +153,7 @@ const CardSlider: React.FC = () => {
                   {restaurant.deliveryTime || "20-30 mins"}
                 </div>
               </div>
-              <p className="text-sm mt-1">{restaurant.shortDescription}</p>
-              <p className="text-sm">{restaurant.location || "India"}</p>
+              <p className="text-sm">{restaurant.address || "India"}</p>
               <Link
                 href={`/restaurants/${restaurant._id}`}
                 className="text-blue-500 hover:underline"

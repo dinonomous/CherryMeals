@@ -13,28 +13,25 @@ require("dotenv").config();
 
 const PORT = 2560;
 
-// Connect to the database
 connectDB();
 
-// Middleware for parsing JSON and URL-encoded data
 app.use(session({
-  secret: 'your_secret_key', // Replace with your own secret
+  secret: 'your_secret_key', 
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to true in production with HTTPS
+  cookie: { secure: false } 
 }));
-// Middleware for parsing JSON and URL-encoded data
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS Configuration - Allow credentials and specify origin
+
 app.use(cors({
-  origin: 'https://cherrymeals.vercel.app',
+  origin: process.env.APP_FE_URL || 'http://localhost:3000',
   credentials: true
 }));
 
-// Connect to the database
 connectDB();
 
 // Use routes
@@ -44,7 +41,7 @@ app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/auth/restaurant", restautantAuth);
 app.use("/api/v1/restaurant", RestaurantRoutes);
 
-// Start the server
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
