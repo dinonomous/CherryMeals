@@ -3,21 +3,27 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Restaurant = {
   _id: string;
   name: string;
   rating: number;
-  deliveryTime?: string; 
-  address?: string; 
-  discount?: string; 
-  imageUrl: string;
+  deliveryTime?: string;
+  address?: string;
+  discount?: string;
+  image: string;
 };
 
 const CardSlider: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]); // Use the defined type
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const handleClick = (id: string) => {
+    router.push(`/restaurants/${id}`);
+  };
 
   // Function to scroll left
   const scrollLeft = () => {
@@ -33,8 +39,8 @@ const CardSlider: React.FC = () => {
   const scrollRight = () => {
     if (containerRef.current) {
       containerRef.current.scrollBy({
-        left: 300, 
-        behavior: "smooth", 
+        left: 300,
+        behavior: "smooth",
       });
     }
   };
@@ -88,7 +94,7 @@ const CardSlider: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-2">
+    <div className="max-w-7xl mx-auto p-2 h-fit">
       <div className="relative">
         <div className="flex items-center">
           <h2 className="text-black font-semibold mr-auto">
@@ -118,48 +124,47 @@ const CardSlider: React.FC = () => {
           </button>
         </div>
         <div
-          className="flex gap-8 mt-4 overflow-x-auto no-scrollbar scroll-snap-x"
+          className="flex gap-4 mt-4 overflow-x-auto no-scrollbar scroll-snap-x h-fit"
           ref={containerRef}
         >
           {restaurants.map((restaurant) => (
             <div
               key={restaurant._id}
-              className="transform transition-transform hover:scale-95 min-w-[350px] rounded-lg"
+              className="transform transition-transform min-w-[350px] rounded-lg h-fit hover:bg-gray-200 p-2"
+              onClick={() => handleClick(restaurant._id)}
             >
               <div className="relative">
                 <Image
-                  src={restaurant.imageUrl}
+                  src={restaurant.image}
                   alt={restaurant.name}
                   width={350}
                   height={200}
+                  priority
+                  className="h-60 object-cover rounded-xl"
                 />
                 <div className="absolute bottom-0 left-2 text-white font-bold text-2xl">
                   {restaurant.discount || "No Discounts"}
                 </div>
               </div>
-              <h3 className="font-bold text-xl mt-2">{restaurant.name}</h3>
-              <div className="flex justify-between text-base">
-                <div className="flex items-center rounded-lg">
-                  <Image
-                    src="/assets/star.svg"
-                    alt="Star"
-                    width={16}
-                    height={16}
-                  />
-                  <span className="ml-1">({restaurant.rating})</span>
+              <div className="px-2">
+                <h3 className="font-bold text-xl mt-2">{restaurant.name}</h3>
+                <div className="flex justify-between text-base">
+                  <div className="flex items-center rounded-lg">
+                    <Image
+                      src="/assets/star.svg"
+                      alt="Star"
+                      width={16}
+                      height={16}
+                    />
+                    <span className="ml-1">({restaurant.rating})</span>
+                  </div>
+                  <div className="flex items-center">
+                    <i className="bi bi-dot"></i>{" "}
+                    {restaurant.deliveryTime || "20-30 mins"}
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <i className="bi bi-dot"></i>{" "}
-                  {restaurant.deliveryTime || "20-30 mins"}
-                </div>
+                <p className="text-sm">{restaurant.address || "India"}</p>
               </div>
-              <p className="text-sm">{restaurant.address || "India"}</p>
-              <Link
-                href={`/restaurants/${restaurant._id}`}
-                className="text-blue-500 hover:underline"
-              >
-                View Details
-              </Link>
             </div>
           ))}
         </div>
