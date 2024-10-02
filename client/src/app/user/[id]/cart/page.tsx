@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import CartItem from "@/components/CartItem";
 import axios from "axios";
+import Image from "next/image";
 
 interface CartItemType {
   foodId: string;
@@ -64,7 +65,6 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
     }
   };
 
-  // Fetch cart items on component mount
   useEffect(() => {
     fetchCartItems();
   }, []);
@@ -80,7 +80,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ cart: updatedCart }), // Send updated cart items
+        body: JSON.stringify({ cart: updatedCart }),
       });
       const data = await response.json();
       if (data.success) {
@@ -191,7 +191,7 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
         localStorage.setItem("orderData", JSON.stringify(orders));
 
         // Redirect to the payment page
-        const redirectToPaymentPage = `${process.env.NEXT_PUBLIC_APP_BE_URL}/user/${userId}/payment`;
+        const redirectToPaymentPage = `${process.env.NEXT_PUBLIC_APP_FE_URL}/user/${userId}/payment`;
         window.location.href = redirectToPaymentPage;
       } else {
         setError("Failed to create order. Please try again.");
@@ -260,7 +260,19 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return (
+      <>
+      <div className="h-2xl w-full mx-auto">
+        <Image
+          src="/assets/emptycart.png"
+          alt="empty cart"
+          width={1000}
+          height={1000}
+          className="h-2xl w-2xl object-cover mx-auto"
+        />
+      </div></>
+      
+    );
   }
 
   return (
@@ -283,7 +295,15 @@ const CartPage: React.FC<{ params: { id: string } }> = ({ params }) => {
               />
             ))
           ) : (
-            <p>Your cart is empty.</p>
+            <div className="h-2xl w-full mx-auto">
+        <Image
+          src="/assets/emptycart.png"
+          alt="empty cart"
+          width={1000}
+          height={1000}
+          className="h-2xl w-2xl object-cover mx-auto"
+        />
+      </div>
           )}
         </div>
         <div className="bg-gray-100 p-4 rounded-lg">
