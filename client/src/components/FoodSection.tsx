@@ -13,6 +13,7 @@ interface Food {
   rating?: number;
   imageUrl?: string;
   itemKey: string;
+  restaurantName: string;
 }
 
 const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
@@ -103,10 +104,10 @@ const FoodSection: React.FC<{ id?: string | null }> = ({ id }) => {
             key={food._id} // Ensure unique key
             title={food.name}
             imageUrl={food.imageUrl || ""} // Ensure imageUrl is always provided
-            restaurantName="The Spice House"
+            restaurantName={food.restaurantName || "not provided"}
             description={food.description}
             price={`Rs ${food.price.toFixed(2) || "0.00"}`}
-            deliveryTime="15-20 mins" // Provide default delivery time
+            deliveryTime="15-20 mins"
             rating={food.rating || 0}
             itemKey={food._id}
             userId={uid}
