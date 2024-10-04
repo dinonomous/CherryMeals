@@ -3,7 +3,7 @@
 
 ### A full-stack food ordering and restaurant management platform built with **Next.js (TypeScript)**, **MongoDB**, and **Express.js**. This application allows users to browse food items, manage orders, and make payments. Restaurant owners can manage their menus and view customer orders.
 
-### If it is possible to give a live demo in meeting or in persion would be help full due to some reasons i am not able to record the screen
+### link to hosted website: https://cherrymeals.vercel.app/
 
 ## Table of Contents
 
